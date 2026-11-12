@@ -79,11 +79,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -91,10 +93,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -113,6 +115,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -225,6 +230,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -253,7 +273,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -296,7 +337,7 @@ footer.site a { color: var(--ink); }
 .calc-chart td:nth-child(n+3) { white-space: nowrap; }
 @media (max-width: 40rem) { .calc-chart td:nth-child(n+3) { white-space: normal; min-width: 7.5rem; } .calc-chart td:nth-child(2) { min-width: 12rem; } }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Painting and graphics","item":"https://blog.eldarstudios.com/painting-and-graphics/"},{"@type":"ListItem","position":3,"name":"Art styles: a list of names and how to spot each one"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/art-styles/#article","headline":"Art styles: a list of names and how to spot each one","description":"A list of 22 major art styles, from the Renaissance to street art, with dates and one plain line on how to recognize each one and where they show up on screen.","inLanguage":"en","url":"https://blog.eldarstudios.com/art-styles/","mainEntityOfPage":"https://blog.eldarstudios.com/art-styles/","datePublished":"2026-11-04","dateModified":"2026-11-04","wordCount":1520,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://www.tate.org.uk/art/art-terms/r/renaissance","https://www.tate.org.uk/art/art-terms/b/baroque","https://www.tate.org.uk/art/art-terms/i/impressionism","https://www.tate.org.uk/art/art-terms/p/post-impressionism","https://www.tate.org.uk/art/art-terms/c/cubism","https://www.tate.org.uk/art/art-terms/s/surrealism","https://www.britannica.com/art/abstract-art","https://www.britannica.com/art/Art-Deco","https://en.wikipedia.org/wiki/Fantasia_(1940_film)","https://en.wikipedia.org/wiki/Loving_Vincent","https://en.wikipedia.org/wiki/Spider-Man:_Into_the_Spider-Verse"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the main art styles?","acceptedAnswer":{"@type":"Answer","text":"The styles museums define most often are Renaissance, Baroque, Rococo, Romanticism, Realism, Impressionism, Post-Impressionism, Art Nouveau, Fauvism, Expressionism, Cubism, Futurism, Dada, Art Deco, Surrealism, abstract art, Abstract Expressionism, pop art, minimalism, conceptual art, photorealism and street art."}},{"@type":"Question","name":"What is the difference between an art style and an art movement?","acceptedAnswer":{"@type":"Answer","text":"A movement is a group of artists active at one time who shared ideas, often with a name and a manifesto, like Surrealism in 1924. A style is the look itself. The look can outlive the group: people still make Art Deco posters a century after the 1925 Paris exhibition."}},{"@type":"Question","name":"What is the oldest art style on this list?","acceptedAnswer":{"@type":"Answer","text":"The Renaissance. Tate dates the revival of art in Italy to about 1400, under the influence of rediscovered classical art. Its peak, the High Renaissance, came between about 1500 and 1530 in the work of Michelangelo, Leonardo and Raphael."}},{"@type":"Question","name":"What are the newest art movements on this list?","acceptedAnswer":{"@type":"Answer","text":"Photorealism and conceptual art. Tate places photorealism in Europe and the USA from the late 1960s and conceptual art between the mid-1960s and the mid-1970s. Street art is harder to date: Tate defines it by place and method, public and usually unsanctioned, rather than by years."}},{"@type":"Question","name":"Which art style uses only shapes and colors?","acceptedAnswer":{"@type":"Answer","text":"Abstract art. Tate defines it as art that does not try to depict visible reality and works through shapes, colors, forms and gestural marks. Minimalism pushes it further, down to simple geometric forms based on the square and the rectangle."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Painting and graphics","item":"https://blog.eldarstudios.com/painting-and-graphics/"},{"@type":"ListItem","position":3,"name":"Art styles: a list of names and how to spot each one"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/art-styles/#article","headline":"Art styles: a list of names and how to spot each one","description":"A list of 22 major art styles, from the Renaissance to street art, with dates and one plain line on how to recognize each one and where they show up on screen.","inLanguage":"en","url":"https://blog.eldarstudios.com/art-styles/","mainEntityOfPage":"https://blog.eldarstudios.com/art-styles/","datePublished":"2026-11-04","dateModified":"2026-11-04","wordCount":1552,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://www.tate.org.uk/art/art-terms/r/renaissance","https://www.tate.org.uk/art/art-terms/b/baroque","https://www.tate.org.uk/art/art-terms/i/impressionism","https://www.tate.org.uk/art/art-terms/p/post-impressionism","https://www.tate.org.uk/art/art-terms/c/cubism","https://www.tate.org.uk/art/art-terms/s/surrealism","https://www.britannica.com/art/abstract-art","https://www.britannica.com/art/Art-Deco","https://en.wikipedia.org/wiki/Fantasia_(1940_film)","https://en.wikipedia.org/wiki/Loving_Vincent","https://en.wikipedia.org/wiki/Spider-Man:_Into_the_Spider-Verse"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the main art styles?","acceptedAnswer":{"@type":"Answer","text":"The styles museums define most often are Renaissance, Baroque, Rococo, Romanticism, Realism, Impressionism, Post-Impressionism, Art Nouveau, Fauvism, Expressionism, Cubism, Futurism, Dada, Art Deco, Surrealism, abstract art, Abstract Expressionism, pop art, minimalism, conceptual art, photorealism and street art."}},{"@type":"Question","name":"What is the difference between an art style and an art movement?","acceptedAnswer":{"@type":"Answer","text":"A movement is a group of artists active at one time who shared ideas, often with a name and a manifesto, like Surrealism in 1924. A style is the look itself. The look can outlive the group: people still make Art Deco posters a century after the 1925 Paris exhibition."}},{"@type":"Question","name":"What is the oldest art style on this list?","acceptedAnswer":{"@type":"Answer","text":"The Renaissance. Tate dates the revival of art in Italy to about 1400, under the influence of rediscovered classical art. Its peak, the High Renaissance, came between about 1500 and 1530 in the work of Michelangelo, Leonardo and Raphael."}},{"@type":"Question","name":"What are the newest art movements on this list?","acceptedAnswer":{"@type":"Answer","text":"Photorealism and conceptual art. Tate places photorealism in Europe and the USA from the late 1960s and conceptual art between the mid-1960s and the mid-1970s. Street art is harder to date: Tate defines it by place and method, public and usually unsanctioned, rather than by years."}},{"@type":"Question","name":"Which art style uses only shapes and colors?","acceptedAnswer":{"@type":"Answer","text":"Abstract art. Tate defines it as art that does not try to depict visible reality and works through shapes, colors, forms and gestural marks. Minimalism pushes it further, down to simple geometric forms based on the square and the rectangle."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -304,7 +345,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/"><span class="tape">Eldar Brothers Studios Blog</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
 <nav class="shelf-index" aria-label="Sections"><ul><li><a href="/cartoons/">Cartoons</a></li><li><a href="/anime/">Anime and manga</a></li><li><a href="/stop-motion-and-3d/">Stop motion, clay and 3D</a></li><li><a href="/film/">Film</a></li><li><a href="/comics/">Comics</a></li><li><a href="/painting-and-graphics/">Painting and graphics</a></li><li><a href="/aesthetics/">Aesthetics</a></li><li><a href="/formats-and-genres/">Formats and genres</a></li><li><a href="/productions/">Productions</a></li><li><a href="/how-we-make-it/">How we make it</a></li><li><a href="/about/">About</a></li></ul></nav>
 </div>
 </header>
@@ -591,6 +632,7 @@ footer.site a { color: var(--ink); }
 <p>The order runs Renaissance, Baroque, Rococo, then Neoclassicism and Romanticism, then Realism and Impressionism in the 19th century. After about 1900 the styles come fast, often only a few years apart, and many begin as reactions to the one before.</p>
 <p>Tate&#39;s Renaissance entry shows the chain: the style passed through Mannerism, Baroque, Rococo, Neoclassicism and Romanticism, and later artists revolted against it with Realism and Impressionism. Rococo itself grew up in reaction to the grandeur of Versailles.</p>
 <p>The 20th century followed the same pattern. Tate describes Cubism as the starting point for many later abstract styles. American pop art turned back to recognizable images after the loose, personal painting of Abstract Expressionism. Minimalism then stripped abstraction down to plain geometry, and conceptual art dropped the object altogether.</p>
+<p>Collecting references for a look you like is easier with a mood board, a collage of images, colors and samples that shows a style at a glance.</p>
 <h2 id="how-can-you-name-a-style-you-see-on-screen">How can you name a style you see on screen?</h2>
 <p>You can name most styles in a film or a series by checking four things in a single frame. Look at the line, the color, the subject and how real the space feels, then compare with the table above.</p>
 <ol>
@@ -599,7 +641,7 @@ footer.site a { color: var(--ink); }
 <li>Check the subject. Brand names and comic panels mean pop art; impossible scenes built from real objects mean Surrealism; no objects at all means abstraction.</li>
 <li>Check the space. Deep, balanced perspective is Renaissance; several viewpoints at once is Cubism; a flat surface of marks is abstract.</li>
 </ol>
-<p>Visual looks that grew up online, like vaporwave and the Y2K aesthetic, mix several of these at once, which is part of why they are called aesthetics rather than styles. More guides on painting and design are collected in the <a href="/painting-and-graphics/">painting and graphics section</a>.</p>
+<p>Visual looks that grew up online, like <a href="/vaporwave/">vaporwave</a> and the <a href="/y2k-aesthetic/">Y2K aesthetic</a>, mix several of these at once, which is part of why they are called aesthetics rather than styles. More guides on painting and design are collected in the <a href="/painting-and-graphics/">painting and graphics section</a>.</p>
 
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What are the main art styles?</summary><p>The styles museums define most often are Renaissance, Baroque, Rococo, Romanticism, Realism, Impressionism, Post-Impressionism, Art Nouveau, Fauvism, Expressionism, Cubism, Futurism, Dada, Art Deco, Surrealism, abstract art, Abstract Expressionism, pop art, minimalism, conceptual art, photorealism and street art.</p></details><details><summary>What is the difference between an art style and an art movement?</summary><p>A movement is a group of artists active at one time who shared ideas, often with a name and a manifesto, like Surrealism in 1924. A style is the look itself. The look can outlive the group: people still make Art Deco posters a century after the 1925 Paris exhibition.</p></details><details><summary>What is the oldest art style on this list?</summary><p>The Renaissance. Tate dates the revival of art in Italy to about 1400, under the influence of rediscovered classical art. Its peak, the High Renaissance, came between about 1500 and 1530 in the work of Michelangelo, Leonardo and Raphael.</p></details><details><summary>What are the newest art movements on this list?</summary><p>Photorealism and conceptual art. Tate places photorealism in Europe and the USA from the late 1960s and conceptual art between the mid-1960s and the mid-1970s. Street art is harder to date: Tate defines it by place and method, public and usually unsanctioned, rather than by years.</p></details><details><summary>Which art style uses only shapes and colors?</summary><p>Abstract art. Tate defines it as art that does not try to depict visible reality and works through shapes, colors, forms and gestural marks. Minimalism pushes it further, down to simple geometric forms based on the square and the rectangle.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://www.tate.org.uk/art/art-terms/r/renaissance" rel="noopener">Art terms: Renaissance, Baroque, Rococo, Romanticism, Realism</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.tate.org.uk/art/art-terms/b/baroque" rel="noopener">Baroque</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.tate.org.uk/art/art-terms/i/impressionism" rel="noopener">Impressionism</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.tate.org.uk/art/art-terms/p/post-impressionism" rel="noopener">Post-impressionism</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.tate.org.uk/art/art-terms/c/cubism" rel="noopener">Cubism</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.tate.org.uk/art/art-terms/s/surrealism" rel="noopener">Surrealism</a>, Tate. Checked 31 October 2026</li><li><a href="https://www.britannica.com/art/abstract-art" rel="noopener">Abstract art</a>, Encyclopaedia Britannica. Checked 31 October 2026</li><li><a href="https://www.britannica.com/art/Art-Deco" rel="noopener">Art Deco</a>, Encyclopaedia Britannica. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Fantasia_(1940_film)" rel="noopener">Fantasia (1940 film)</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Loving_Vincent" rel="noopener">Loving Vincent</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Spider-Man:_Into_the_Spider-Verse" rel="noopener">Spider-Man: Into the Spider-Verse</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
 <section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/what-is-abstract-art/"><span class="entry-title">What is abstract art? Meaning in simple words</span><span class="entry-desc">Abstract art shows no recognizable things, only shape, color, line and mark. Where it came from, who made the first abstract works and how to look at it.</span></a><time datetime="2026-11-06">6 November 2026</time></li><li><a href="/what-is-art-deco/"><span class="entry-title">What is Art Deco? The style, its look and its history</span><span class="entry-desc">Art Deco is the sleek geometric design style of the 1920s and 1930s, named after a 1925 Paris exhibition. How to spot it and where it shows up on screen.</span></a><time datetime="2026-11-07">7 November 2026</time></li><li><a href="/what-is-pop-art/"><span class="entry-title">What is pop art? The movement, its look and artists</span><span class="entry-desc">Pop art is the 1950s–60s movement that turned comics, adverts, soup cans and film stars into art. Where it started, how to spot it and how it reached TV.</span></a><time datetime="2026-11-07">7 November 2026</time></li></ul></section></div></div>

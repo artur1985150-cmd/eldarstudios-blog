@@ -81,11 +81,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -93,10 +95,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -115,6 +117,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -227,6 +232,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -255,7 +275,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -306,7 +347,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/"><span class="tape">Eldar Brothers Studios Blog</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/ru/komiksy/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><a class="lang" href="/ru/komiksy/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
 <nav class="shelf-index" aria-label="Sections"><ul><li><a href="/cartoons/">Cartoons</a></li><li><a href="/anime/">Anime and manga</a></li><li><a href="/stop-motion-and-3d/">Stop motion, clay and 3D</a></li><li><a href="/film/">Film</a></li><li><a href="/comics/" aria-current="page">Comics</a></li><li><a href="/painting-and-graphics/">Painting and graphics</a></li><li><a href="/aesthetics/">Aesthetics</a></li><li><a href="/formats-and-genres/">Formats and genres</a></li><li><a href="/productions/">Productions</a></li><li><a href="/how-we-make-it/">How we make it</a></li><li><a href="/about/">About</a></li></ul></nav>
 </div>
 </header>

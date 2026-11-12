@@ -79,11 +79,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -91,10 +93,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -113,6 +115,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -225,6 +230,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -253,7 +273,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -296,7 +337,7 @@ footer.site a { color: var(--ink); }
 .calc-chart td:nth-child(n+3) { white-space: nowrap; }
 @media (max-width: 40rem) { .calc-chart td:nth-child(n+3) { white-space: normal; min-width: 7.5rem; } .calc-chart td:nth-child(2) { min-width: 12rem; } }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/ru/#website","url":"https://blog.eldarstudios.com/ru/","name":"Блог Eldar Brothers Studios","inLanguage":"ru","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://blog.eldarstudios.com/ru/"},{"@type":"ListItem","position":2,"name":"Кино","item":"https://blog.eldarstudios.com/ru/kino/"},{"@type":"ListItem","position":3,"name":"Фильмы про судьбу: 14 картин о выборе и случае"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/#article","headline":"Фильмы про судьбу: 14 картин о выборе и случае","description":"Фильмы про судьбу от «Беги, Лола, беги» до «Прибытия»: год, режиссёр и о чём каждый, плюс три типа таких историй и с какого фильма начать.","inLanguage":"ru","url":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/","mainEntityOfPage":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/","datePublished":"2026-11-05","dateModified":"2026-11-05","wordCount":1219,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://ru.wikipedia.org/wiki/Беги,_Лола,_беги","https://ru.wikipedia.org/wiki/Осторожно,_двери_закрываются_(фильм)","https://ru.wikipedia.org/wiki/Господин_Никто_(фильм,_2009)","https://ru.wikipedia.org/wiki/Эффект_бабочки_(фильм)","https://ru.wikipedia.org/wiki/Пункт_назначения_(фильм)","https://ru.wikipedia.org/wiki/Особое_мнение_(фильм,_2002)","https://ru.wikipedia.org/wiki/Предопределение_(фильм,_2014)","https://ru.wikipedia.org/wiki/12_обезьян_(фильм)","https://ru.wikipedia.org/wiki/Донни_Дарко","https://ru.wikipedia.org/wiki/Меняющие_реальность","https://ru.wikipedia.org/wiki/Гаттака","https://ru.wikipedia.org/wiki/Облачный_атлас_(фильм)","https://ru.wikipedia.org/wiki/Прибытие_(фильм,_2016)","https://ru.wikipedia.org/wiki/Интерстеллар","https://ru.wikipedia.org/wiki/Киберпанк","https://www.film.ru/compilation/filmy-pro-sudbu","https://www.film.ru/movies/interstellar"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Какой фильм про судьбу посмотреть первым?","acceptedAnswer":{"@type":"Answer","text":"«Беги, Лола, беги» (1998). Фильм короткий и простой по устройству: Лоле нужно за двадцать минут найти 100 000 марок для парня, и одна и та же история проигрывается три раза с разным концом. После него легко понять, нравится ли вам тема."}},{"@type":"Question","name":"Чем фильм про судьбу отличается от фильма про путешествия во времени?","acceptedAnswer":{"@type":"Answer","text":"Путешествие во времени — это приём, а судьба — вопрос. В «Эффекте бабочки» или «12 обезьянах» герои перемещаются во времени, но смотрят их ради другого: можно ли изменить то, что уже случилось. Бывают фильмы про судьбу вовсе без машины времени, например «Осторожно, двери закрываются»."}},{"@type":"Question","name":"Есть ли фильмы, где судьбу решает кто-то другой?","acceptedAnswer":{"@type":"Answer","text":"Да. В «Меняющих реальность» (2011) за жизнью политика Дэвида Норриса следят люди в старомодных шляпах и поправляют её. В «Гаттаке» (1997) судьбу решают гены: место в жизни зависит от того, насколько безупречным человек родился."}},{"@type":"Question","name":"Какие фильмы про судьбу снял Кристофер Нолан?","acceptedAnswer":{"@type":"Answer","text":"Из его фильмов к теме ближе всего «Интерстеллар» (2014): отец улетает через кротовую нору, а из-за замедления времени у чёрной дыры годы для него и для неё идут по-разному. Похожие на него картины мы собрали в отдельной подборке."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/ru/#website","url":"https://blog.eldarstudios.com/ru/","name":"Блог Eldar Brothers Studios","inLanguage":"ru","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Главная","item":"https://blog.eldarstudios.com/ru/"},{"@type":"ListItem","position":2,"name":"Кино","item":"https://blog.eldarstudios.com/ru/kino/"},{"@type":"ListItem","position":3,"name":"Фильмы про судьбу: 14 картин о выборе и случае"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/#article","headline":"Фильмы про судьбу: 14 картин о выборе и случае","description":"Фильмы про судьбу от «Беги, Лола, беги» до «Прибытия»: год, режиссёр и о чём каждый, плюс три типа таких историй и с какого фильма начать.","inLanguage":"ru","url":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/","mainEntityOfPage":"https://blog.eldarstudios.com/ru/filmy-pro-sudbu/","datePublished":"2026-11-05","dateModified":"2026-11-05","wordCount":1273,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://ru.wikipedia.org/wiki/Беги,_Лола,_беги","https://ru.wikipedia.org/wiki/Осторожно,_двери_закрываются_(фильм)","https://ru.wikipedia.org/wiki/Господин_Никто_(фильм,_2009)","https://ru.wikipedia.org/wiki/Эффект_бабочки_(фильм)","https://ru.wikipedia.org/wiki/Пункт_назначения_(фильм)","https://ru.wikipedia.org/wiki/Особое_мнение_(фильм,_2002)","https://ru.wikipedia.org/wiki/Предопределение_(фильм,_2014)","https://ru.wikipedia.org/wiki/12_обезьян_(фильм)","https://ru.wikipedia.org/wiki/Донни_Дарко","https://ru.wikipedia.org/wiki/Меняющие_реальность","https://ru.wikipedia.org/wiki/Гаттака","https://ru.wikipedia.org/wiki/Облачный_атлас_(фильм)","https://ru.wikipedia.org/wiki/Прибытие_(фильм,_2016)","https://ru.wikipedia.org/wiki/Интерстеллар","https://ru.wikipedia.org/wiki/Киберпанк","https://www.film.ru/compilation/filmy-pro-sudbu","https://www.film.ru/movies/interstellar"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Какой фильм про судьбу посмотреть первым?","acceptedAnswer":{"@type":"Answer","text":"«Беги, Лола, беги» (1998). Фильм короткий и простой по устройству: Лоле нужно за двадцать минут найти 100 000 марок для парня, и одна и та же история проигрывается три раза с разным концом. После него легко понять, нравится ли вам тема."}},{"@type":"Question","name":"Чем фильм про судьбу отличается от фильма про путешествия во времени?","acceptedAnswer":{"@type":"Answer","text":"Путешествие во времени — это приём, а судьба — вопрос. В «Эффекте бабочки» или «12 обезьянах» герои перемещаются во времени, но смотрят их ради другого: можно ли изменить то, что уже случилось. Бывают фильмы про судьбу вовсе без машины времени, например «Осторожно, двери закрываются»."}},{"@type":"Question","name":"Есть ли фильмы, где судьбу решает кто-то другой?","acceptedAnswer":{"@type":"Answer","text":"Да. В «Меняющих реальность» (2011) за жизнью политика Дэвида Норриса следят люди в старомодных шляпах и поправляют её. В «Гаттаке» (1997) судьбу решают гены: место в жизни зависит от того, насколько безупречным человек родился."}},{"@type":"Question","name":"Какие фильмы про судьбу снял Кристофер Нолан?","acceptedAnswer":{"@type":"Answer","text":"Из его фильмов к теме ближе всего «Интерстеллар» (2014): отец улетает через кротовую нору, а из-за замедления времени у чёрной дыры годы для него и для неё идут по-разному. Похожие на него картины мы собрали в отдельной подборке."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">К содержанию</a>
@@ -304,7 +345,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/ru/"><span class="tape">Блог Eldar Brothers Studios</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Язык: </span><span lang="ru">Русский</span></summary><ul><li><a class="lang" href="/" hreflang="en" lang="en" dir="ltr" data-goatcounter-click="lang-en">English</a></li><li><span class="lang-here" lang="ru" dir="ltr" aria-current="true">Русский</span></li></ul></details><button class="theme" type="button" hidden aria-label="Ночные страницы" aria-pressed="false"><span class="leader head" aria-hidden="true">День</span><span class="leader tail" aria-hidden="true">Ночь</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Язык: </span><span lang="ru">Русский</span></summary><ul><li><a class="lang" href="/" hreflang="en" lang="en" dir="ltr" data-goatcounter-click="lang-en">English</a></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><span class="lang-here" lang="ru" dir="ltr" aria-current="true">Русский</span></li></ul></details><button class="theme" type="button" hidden aria-label="Ночные страницы" aria-pressed="false"><span class="leader head" aria-hidden="true">День</span><span class="leader tail" aria-hidden="true">Ночь</span></button></div>
 <nav class="shelf-index" aria-label="Разделы"><ul><li><a href="/ru/anime/">Аниме и манга</a></li><li><a href="/ru/kino/">Кино</a></li><li><a href="/ru/komiksy/">Комиксы</a></li><li><a href="/ru/zhivopis-i-grafika/">Живопись и графика</a></li><li><a href="/ru/formaty-i-zhanry/">Форматы и жанры</a></li><li><a href="/ru/o-sajte/">О сайте</a></li></ul></nav>
 </div>
 </header>
@@ -549,6 +590,8 @@ footer.site a { color: var(--ink); }
 <p>Фильмы про судьбу часто живут в мирах с сильным визуальным стилем. «Особое мнение» в Википедии упомянуто среди голливудских фильмов с элементами киберпанка; что это за стиль и откуда он взялся, мы разбираем в статье <a href="/ru/kiberpank-stil/">киберпанк стиль</a>. Родственное ему направление с паром и латунью вместо неона описано в статье <a href="/ru/stimpank-stil/">стимпанк стиль</a>.</p>
 <p>Фильмы из этой подборки относятся к разным жанрам: драме, фантастике, триллеру. Чем они отличаются и почему у одного фильма бывает сразу несколько жанровых меток, мы разбираем в статье жанры фильмов.</p>
 <p>Если в этих фильмах вас цепляют пустые коридоры, ночные залы и места, где время будто остановилось, почитайте про <a href="/ru/liminalnoe-prostranstvo/">лиминальное пространство</a>: это интернет-эстетика, которая пришла и в кино. Все подборки фильмов собраны в разделе <a href="/ru/kino/">кино</a>.</p>
+<p>Если вам ближе любовь, которую нельзя выбрать, загляните в подборку фильмов, похожих на «Сумерки».</p>
+<p>Если хочется не выдуманной судьбы, а настоящей, посмотрите, как кино пересказывает жизни реальных людей: об этом статья что такое байопик, а о коротких появлениях знаменитостей в кадре — что такое камео.</p>
 <h2 id="s-chego-nachat">С чего начать</h2>
 <p>Выбирайте по настроению и по тому, сколько у вас времени. Первые два пункта лучше всего подходят тем, кто ещё не решил, его ли это тема.</p>
 <ul>

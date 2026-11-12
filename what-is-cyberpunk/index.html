@@ -81,11 +81,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -93,10 +95,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -115,6 +117,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -227,6 +232,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -255,7 +275,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -298,7 +339,7 @@ footer.site a { color: var(--ink); }
 .calc-chart td:nth-child(n+3) { white-space: nowrap; }
 @media (max-width: 40rem) { .calc-chart td:nth-child(n+3) { white-space: normal; min-width: 7.5rem; } .calc-chart td:nth-child(2) { min-width: 12rem; } }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Film","item":"https://blog.eldarstudios.com/film/"},{"@type":"ListItem","position":3,"name":"What is cyberpunk? The genre, its origins and key films"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/what-is-cyberpunk/#article","headline":"What is cyberpunk? The genre, its origins and key films","description":"Cyberpunk is science fiction about high tech and low life: hackers, megacorporations and neon cities. Where it came from, the key books and films, and the look.","inLanguage":"en","url":"https://blog.eldarstudios.com/what-is-cyberpunk/","mainEntityOfPage":"https://blog.eldarstudios.com/what-is-cyberpunk/","datePublished":"2026-11-05","dateModified":"2026-11-05","wordCount":1429,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://en.wikipedia.org/wiki/Cyberpunk","https://www.studiobinder.com/blog/what-is-cyberpunk-definition/","https://en.wikipedia.org/wiki/Neuromancer","https://en.wikipedia.org/wiki/Blade_Runner","https://en.wikipedia.org/wiki/Cyberpunk_2077","https://en.wikipedia.org/wiki/Cyberpunk:_Edgerunners"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is cyberpunk in simple words?","acceptedAnswer":{"@type":"Answer","text":"It is science fiction about a near future where computers, implants and artificial intelligence are everywhere, but most people are poor and big companies hold the power. The heroes are usually outsiders such as hackers, mercenaries or detectives who live on the edge of that society."}},{"@type":"Question","name":"Who invented the word cyberpunk?","acceptedAnswer":{"@type":"Answer","text":"The American writer Bruce Bethke. He used it as the title of a short story written in 1980 and published in Amazing Stories in 1983. Editor Gardner Dozois then picked the word up and used it for writers such as William Gibson and Bruce Sterling."}},{"@type":"Question","name":"What was the first cyberpunk movie?","acceptedAnswer":{"@type":"Answer","text":"Blade Runner (1982), directed by Ridley Scott, is usually named as the first major cyberpunk film. Fritz Lang's Metropolis (1927) is called proto-cyberpunk, an ancestor rather than a member of the genre."}},{"@type":"Question","name":"Is Cyberpunk 2077 based on a book?","acceptedAnswer":{"@type":"Answer","text":"No. The 2020 game by CD Projekt Red is set in the world of Mike Pondsmith's tabletop role-playing game Cyberpunk, first released in 1988. The 2022 anime series Cyberpunk: Edgerunners is set in the same world."}},{"@type":"Question","name":"What is the difference between cyberpunk and dystopia?","acceptedAnswer":{"@type":"Answer","text":"Dystopia is any imagined bad society. Cyberpunk is one kind of dystopia with a specific recipe: a near-future city, advanced computer and body technology, corporations stronger than governments, and outsiders who use technology against the system."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Film","item":"https://blog.eldarstudios.com/film/"},{"@type":"ListItem","position":3,"name":"What is cyberpunk? The genre, its origins and key films"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/what-is-cyberpunk/#article","headline":"What is cyberpunk? The genre, its origins and key films","description":"Cyberpunk is science fiction about high tech and low life: hackers, megacorporations and neon cities. Where it came from, the key books and films, and the look.","inLanguage":"en","url":"https://blog.eldarstudios.com/what-is-cyberpunk/","mainEntityOfPage":"https://blog.eldarstudios.com/what-is-cyberpunk/","datePublished":"2026-11-05","dateModified":"2026-11-05","wordCount":1468,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://en.wikipedia.org/wiki/Cyberpunk","https://www.studiobinder.com/blog/what-is-cyberpunk-definition/","https://en.wikipedia.org/wiki/Neuromancer","https://en.wikipedia.org/wiki/Blade_Runner","https://en.wikipedia.org/wiki/Cyberpunk_2077","https://en.wikipedia.org/wiki/Cyberpunk:_Edgerunners"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is cyberpunk in simple words?","acceptedAnswer":{"@type":"Answer","text":"It is science fiction about a near future where computers, implants and artificial intelligence are everywhere, but most people are poor and big companies hold the power. The heroes are usually outsiders such as hackers, mercenaries or detectives who live on the edge of that society."}},{"@type":"Question","name":"Who invented the word cyberpunk?","acceptedAnswer":{"@type":"Answer","text":"The American writer Bruce Bethke. He used it as the title of a short story written in 1980 and published in Amazing Stories in 1983. Editor Gardner Dozois then picked the word up and used it for writers such as William Gibson and Bruce Sterling."}},{"@type":"Question","name":"What was the first cyberpunk movie?","acceptedAnswer":{"@type":"Answer","text":"Blade Runner (1982), directed by Ridley Scott, is usually named as the first major cyberpunk film. Fritz Lang's Metropolis (1927) is called proto-cyberpunk, an ancestor rather than a member of the genre."}},{"@type":"Question","name":"Is Cyberpunk 2077 based on a book?","acceptedAnswer":{"@type":"Answer","text":"No. The 2020 game by CD Projekt Red is set in the world of Mike Pondsmith's tabletop role-playing game Cyberpunk, first released in 1988. The 2022 anime series Cyberpunk: Edgerunners is set in the same world."}},{"@type":"Question","name":"What is the difference between cyberpunk and dystopia?","acceptedAnswer":{"@type":"Answer","text":"Dystopia is any imagined bad society. Cyberpunk is one kind of dystopia with a specific recipe: a near-future city, advanced computer and body technology, corporations stronger than governments, and outsiders who use technology against the system."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -306,7 +347,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/"><span class="tape">Eldar Brothers Studios Blog</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/ru/kiberpank-stil/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><a class="lang" href="/ru/kiberpank-stil/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
 <nav class="shelf-index" aria-label="Sections"><ul><li><a href="/cartoons/">Cartoons</a></li><li><a href="/anime/">Anime and manga</a></li><li><a href="/stop-motion-and-3d/">Stop motion, clay and 3D</a></li><li><a href="/film/">Film</a></li><li><a href="/comics/">Comics</a></li><li><a href="/painting-and-graphics/">Painting and graphics</a></li><li><a href="/aesthetics/">Aesthetics</a></li><li><a href="/formats-and-genres/">Formats and genres</a></li><li><a href="/productions/">Productions</a></li><li><a href="/how-we-make-it/">How we make it</a></li><li><a href="/about/">About</a></li></ul></nav>
 </div>
 </header>
@@ -499,7 +540,7 @@ footer.site a { color: var(--ink); }
 <p>Much of that look came from real places in East Asia. Ridley Scott said he imagined the Los Angeles of Blade Runner as &quot;Hong Kong on a very bad day.&quot; Mamoru Oshii based the streets of Ghost in the Shell (1995) on Hong Kong too, because its chaotic streets mixed old and new. Kowloon Walled City, a famously overbuilt district of Hong Kong, is often cited as a model for cyberpunk cityscapes.</p>
 <p>William Gibson has said that &quot;Modern Japan simply was cyberpunk,&quot; and Neuromancer opens in Chiba, a Japanese industrial city. Critics have also pointed out a downside: Western cyberpunk often uses Asian cities and people as exotic scenery, a pattern called techno-Orientalism.</p>
 <p>Cyberpunk cinema also borrows from older crime films. Blade Runner pays homage to classic film noir, with its shadows and cynical heroes. The editing term for a fast run of short shots is explained in what a montage is.</p>
-<p>The look travels well beyond the genre. Empty, uncanny interiors from the internet&#39;s <a href="/liminal-space/">liminal space aesthetic</a> and the pastel retro screens of vaporwave both borrow pieces of it. More film styles are collected in our <a href="/film/">film section</a>.</p>
+<p>The look travels well beyond the genre. Empty, uncanny interiors from the internet&#39;s <a href="/liminal-space/">liminal space aesthetic</a> and the pastel retro screens of <a href="/vaporwave/">vaporwave</a> both borrow pieces of it. More film styles are collected in our <a href="/film/">film section</a>.</p>
 <h2 id="how-did-japan-shape-cyberpunk">How did Japan shape cyberpunk?</h2>
 <p>Japan gave cyberpunk its second home. Japanese cyberpunk began in 1982 with Katsuhiro Otomo&#39;s manga Akira, and Otomo&#39;s own 1988 anime film made it famous worldwide. Ghost in the Shell, Battle Angel Alita and Cowboy Bebop followed.</p>
 <p>Japanese cyberpunk grew from different roots than the American kind. Wikipedia notes that when Akira began, cyberpunk novels had not yet been translated into Japanese; the Japanese strand came partly from the local punk music scene and the punk films of Sogo Ishii. Live-action titles such as Tetsuo: The Iron Man (1989) took body modification to extremes.</p>
@@ -508,6 +549,7 @@ footer.site a { color: var(--ink); }
 <p>No. Cyberpunk is the genre; Cyberpunk 2077 is one game inside it. Many people searching for &quot;cyberpunk&quot; today mean the game or the anime, so the difference is worth spelling out.</p>
 <p>Cyberpunk 2077 is a 2020 action role-playing game made by the Polish studio CD Projekt Red. It is set in Night City, a dystopian metropolis in California, and based on Mike Pondsmith&#39;s tabletop role-playing game Cyberpunk, first released in 1988. Keanu Reeves voices Johnny Silverhand, a rock star whose digital copy lives in the hero&#39;s head.</p>
 <p>Cyberpunk: Edgerunners (2022) is an anime miniseries set in the same Night City, made with the Japanese studio Trigger and released on Netflix. It follows David Martinez, a poor student who joins a crew of cybernetically enhanced mercenaries, called edgerunners. Its success sent many viewers back to the game. Both works use the genre&#39;s classic parts: implants, corporate rule, hackers and a city that eats its young.</p>
+<p>Three film terms worth knowing alongside the genre: the Dutch angle, a deliberately tilted camera frame; Foley, sound effects recorded after shooting; and the short film.</p>
 <h2 id="where-should-you-start-with-cyberpunk">Where should you start with cyberpunk?</h2>
 <p>Start with the two works the genre grew from: watch Blade Runner (1982) and read Neuromancer (1984). Then move to Japan with Akira (1988) and Ghost in the Shell (1995), and finish with The Matrix (1999) to see how those ideas reached Hollywood.</p>
 <ol>
@@ -521,7 +563,7 @@ footer.site a { color: var(--ink); }
 <p>Watching in roughly this order shows how each work answers the one before it. Cyberpunk keeps changing because its &quot;future&quot; keeps arriving: the networks and implants of 1984 are partly today&#39;s phones and apps, and new stories have to imagine past them.</p>
 
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What is cyberpunk in simple words?</summary><p>It is science fiction about a near future where computers, implants and artificial intelligence are everywhere, but most people are poor and big companies hold the power. The heroes are usually outsiders such as hackers, mercenaries or detectives who live on the edge of that society.</p></details><details><summary>Who invented the word cyberpunk?</summary><p>The American writer Bruce Bethke. He used it as the title of a short story written in 1980 and published in Amazing Stories in 1983. Editor Gardner Dozois then picked the word up and used it for writers such as William Gibson and Bruce Sterling.</p></details><details><summary>What was the first cyberpunk movie?</summary><p>Blade Runner (1982), directed by Ridley Scott, is usually named as the first major cyberpunk film. Fritz Lang's Metropolis (1927) is called proto-cyberpunk, an ancestor rather than a member of the genre.</p></details><details><summary>Is Cyberpunk 2077 based on a book?</summary><p>No. The 2020 game by CD Projekt Red is set in the world of Mike Pondsmith's tabletop role-playing game Cyberpunk, first released in 1988. The 2022 anime series Cyberpunk: Edgerunners is set in the same world.</p></details><details><summary>What is the difference between cyberpunk and dystopia?</summary><p>Dystopia is any imagined bad society. Cyberpunk is one kind of dystopia with a specific recipe: a near-future city, advanced computer and body technology, corporations stronger than governments, and outsiders who use technology against the system.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Cyberpunk" rel="noopener">Cyberpunk</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://www.studiobinder.com/blog/what-is-cyberpunk-definition/" rel="noopener">What is Cyberpunk: Genre Definition, Origins &amp; Examples</a>, StudioBinder. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Neuromancer" rel="noopener">Neuromancer</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Blade_Runner" rel="noopener">Blade Runner</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Cyberpunk_2077" rel="noopener">Cyberpunk 2077</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Cyberpunk:_Edgerunners" rel="noopener">Cyberpunk: Edgerunners</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
-<section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/liminal-space/"><span class="entry-title">Liminal space: meaning, the Backrooms and films</span><span class="entry-desc">A liminal space is an in-between place, like an empty hallway or a mall after hours. What the term means, the internet aesthetic, the Backrooms and films.</span></a><time datetime="2026-11-05">5 November 2026</time></li><li><a href="/what-is-anime/"><span class="entry-title">What is anime? Meaning, history and where to start</span><span class="entry-desc">Anime is animation made in Japan. Where the word comes from, how to recognize the style, key dates from 1917 to Spirited Away, and which shows to start with.</span></a><time datetime="2026-11-09">9 November 2026</time></li></ul></section></div></div>
+<section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/liminal-space/"><span class="entry-title">Liminal space: meaning, the Backrooms and films</span><span class="entry-desc">A liminal space is an in-between place, like an empty hallway or a mall after hours. What the term means, the internet aesthetic, the Backrooms and films.</span></a><time datetime="2026-11-05">5 November 2026</time></li><li><a href="/what-is-anime/"><span class="entry-title">What is anime? Meaning, history and where to start</span><span class="entry-desc">Anime is animation made in Japan. Where the word comes from, how to recognize the style, key dates from 1917 to Spirited Away, and which shows to start with.</span></a><time datetime="2026-11-09">9 November 2026</time></li><li><a href="/vaporwave/"><span class="entry-title">Vaporwave: the music, the art and where it came from</span><span class="entry-desc">Vaporwave is an internet music genre and visual aesthetic from the early 2010s: slowed-down 1980s samples, Greek statues, old Windows and pink neon.</span></a><time datetime="2026-11-12">12 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>
 <footer class="site"><div class="bar">
 <p class="ai-note">Written with the help of an AI model and checked against the sources listed under each article. The studio's own series are made with AI too. <a href="/how-we-make-it/">How we make it</a></p>

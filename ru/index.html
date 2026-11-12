@@ -7,6 +7,7 @@
 <meta name="description" content="Ответы для зрителей: сериалы-антологии, живописная анимация, короткий метр и то, как делается каждый визуальный стиль.">
 <link rel="canonical" href="https://blog.eldarstudios.com/ru/">
 <link rel="alternate" hreflang="en" href="https://blog.eldarstudios.com/">
+<link rel="alternate" hreflang="es" href="https://blog.eldarstudios.com/es/">
 <link rel="alternate" hreflang="ru" href="https://blog.eldarstudios.com/ru/">
 <link rel="alternate" hreflang="x-default" href="https://blog.eldarstudios.com/">
 <meta property="og:type" content="website">
@@ -81,11 +82,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -93,10 +96,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -115,6 +118,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -227,6 +233,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -255,7 +276,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -306,7 +348,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/ru/"><span class="tape">Блог Eldar Brothers Studios</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Язык: </span><span lang="ru">Русский</span></summary><ul><li><a class="lang" href="/" hreflang="en" lang="en" dir="ltr" data-goatcounter-click="lang-en">English</a></li><li><span class="lang-here" lang="ru" dir="ltr" aria-current="true">Русский</span></li></ul></details><button class="theme" type="button" hidden aria-label="Ночные страницы" aria-pressed="false"><span class="leader head" aria-hidden="true">День</span><span class="leader tail" aria-hidden="true">Ночь</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Язык: </span><span lang="ru">Русский</span></summary><ul><li><a class="lang" href="/" hreflang="en" lang="en" dir="ltr" data-goatcounter-click="lang-en">English</a></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><span class="lang-here" lang="ru" dir="ltr" aria-current="true">Русский</span></li></ul></details><button class="theme" type="button" hidden aria-label="Ночные страницы" aria-pressed="false"><span class="leader head" aria-hidden="true">День</span><span class="leader tail" aria-hidden="true">Ночь</span></button></div>
 <nav class="shelf-index" aria-label="Разделы"><ul><li><a href="/ru/anime/">Аниме и манга</a></li><li><a href="/ru/kino/">Кино</a></li><li><a href="/ru/komiksy/">Комиксы</a></li><li><a href="/ru/zhivopis-i-grafika/">Живопись и графика</a></li><li><a href="/ru/formaty-i-zhanry/">Форматы и жанры</a></li><li><a href="/ru/o-sajte/">О сайте</a></li></ul></nav>
 </div>
 </header>
@@ -318,8 +360,8 @@ footer.site a { color: var(--ink); }
 <p class="plate-lead">Ответы для зрителей: сериалы-антологии, живописная анимация, короткий метр и то, как делается каждый визуальный стиль.</p>
 
 </header>
-<section aria-labelledby="latest-h"><h2 id="latest-h">Свежие статьи <span class="count">18</span></h2><ul class="entries"><li><a href="/ru/anime-pro-demonov/"><span class="entry-title">Аниме про демонов: 9 тайтлов от «Инуяси» до бензопилы</span><span class="entry-desc">Аниме про демонов делятся на японских они и европейских дьяволов с контрактами. Девять тайтлов с годом и числом серий, о чём каждое и с чего начать.</span></a><time datetime="2026-11-11">11 ноября 2026 г.</time></li><li><a href="/ru/grustnye-anime/"><span class="entry-title">Грустные аниме: 9 тайтлов, после которых плачут</span><span class="entry-desc">Грустные аниме по причине слёз: война, утрата, расставание, вина. Девять тайтлов с годом и числом серий, от «Могилы светлячков» до «Вайолет Эвергарден».</span></a><time datetime="2026-11-11">11 ноября 2026 г.</time></li><li><a href="/ru/anime-pro-magiyu/"><span class="entry-title">Аниме про магию: 11 тайтлов о магах и волшебницах</span><span class="entry-desc">Аниме про магию по типам: школы магов, девочки-волшебницы, алхимия, фэнтези-походы. Год, число серий и о чём каждое из 11, плюс с чего начать.</span></a><time datetime="2026-11-10">10 ноября 2026 г.</time></li><li><a href="/ru/chto-takoe-manhva/"><span class="entry-title">Что такое манхва: чем отличается от манги и маньхуа</span><span class="entry-desc">Манхва — корейские комиксы. Читаются слева направо, в сети выходят цветной вертикальной лентой-вебтуном. Отличия от манги и маньхуа, история, главные тайтлы.</span></a><time datetime="2026-11-10">10 ноября 2026 г.</time></li><li><a href="/ru/chto-takoe-pashalka/"><span class="entry-title">Что такое пасхалка: значение слова и примеры</span><span class="entry-desc">Пасхалка — секрет, который авторы спрятали в игре, фильме или программе для самых внимательных. Откуда слово, первая пасхалка Atari и примеры.</span></a><time datetime="2026-11-09">9 ноября 2026 г.</time></li><li><a href="/ru/filmy-pohozhie-na-interstellar/"><span class="entry-title">Фильмы, похожие на «Интерстеллар»: 11 картин</span><span class="entry-desc">Фильмы, похожие на «Интерстеллар»: от «Космической одиссеи 2001 года» до «К звёздам». Год, режиссёр, чем похож каждый и какой смотреть первым.</span></a><time datetime="2026-11-09">9 ноября 2026 г.</time></li><li><a href="/ru/retrofuturizm/"><span class="entry-title">Ретрофутуризм: что это, стили и примеры</span><span class="entry-desc">Ретрофутуризм — будущее, каким его рисовали в прошлом: летающие машины, ракеты, роботы-слуги. Откуда слово, стимпанк, атомпанк и примеры в кино.</span></a><time datetime="2026-11-08">8 ноября 2026 г.</time></li><li><a href="/ru/stimpank-stil/"><span class="entry-title">Стимпанк: что это за стиль, признаки и фильмы</span><span class="entry-desc">Стимпанк — фантастика и стиль, где мир живёт на паре: викторианская эпоха, шестерни, медь, дирижабли. Откуда слово, признаки и фильмы с годами.</span></a><time datetime="2026-11-08">8 ноября 2026 г.</time></li><li><a href="/ru/kiberpank-stil/"><span class="entry-title">Киберпанк стиль: что это и как он выглядит в кино</span><span class="entry-desc">Киберпанк стиль: высокие технологии и низкая жизнь, неон, дождь и мегакорпорации. Откуда он пришёл, по каким признакам узнать и какие фильмы и аниме смотреть.</span></a><time datetime="2026-11-07">7 ноября 2026 г.</time></li><li><a href="/ru/liminalnoe-prostranstvo/"><span class="entry-title">Лиминальное пространство: что это и откуда тревога</span><span class="entry-desc">Лиминальное пространство — пустое место перехода: коридор, лестница, ночной торговый центр. Откуда термин, что такое Закулисье и какое кино в этой эстетике.</span></a><time datetime="2026-11-07">7 ноября 2026 г.</time></li><li><a href="/ru/anime-pohozhie-na-tetrad-smerti/"><span class="entry-title">Аниме похожие на «Тетрадь смерти»: 7 тайтлов и почему</span><span class="entry-desc">Code Geass, «Монстр», Psycho-Pass и ещё четыре аниме, похожих на «Тетрадь смерти»: что именно в них общего, год, число серий и с чего начать.</span></a><time datetime="2026-11-06">6 ноября 2026 г.</time></li><li><a href="/ru/chto-takoe-sikvel/"><span class="entry-title">Что такое сиквел: приквел, ремейк, ребут и спин-офф</span><span class="entry-desc">Сиквел — продолжение истории, приквел — её предыстория, ремейк пересказывает её заново. Таблица всех «-квелов» с примерами и годами.</span></a><time datetime="2026-11-06">6 ноября 2026 г.</time></li></ul></section>
-<section aria-labelledby="shelves-h"><h2 id="shelves-h">Разделы</h2><ol class="shelves"><li><a class="shelf-row" href="/ru/anime/"><span class="reel" aria-hidden="true">2</span><span class="shelf-name">Аниме и манга</span><span class="shelf-count">7 статей</span></a></li><li><a class="shelf-row" href="/ru/kino/"><span class="reel" aria-hidden="true">4</span><span class="shelf-name">Кино</span><span class="shelf-count">5 статей</span></a></li><li><a class="shelf-row" href="/ru/komiksy/"><span class="reel" aria-hidden="true">5</span><span class="shelf-name">Комиксы</span><span class="shelf-count">1 статья</span></a></li><li><a class="shelf-row" href="/ru/zhivopis-i-grafika/"><span class="reel" aria-hidden="true">6</span><span class="shelf-name">Живопись и графика</span><span class="shelf-count">3 статьи</span></a></li><li><a class="shelf-row" href="/ru/formaty-i-zhanry/"><span class="reel" aria-hidden="true">8</span><span class="shelf-name">Форматы и жанры</span><span class="shelf-count">2 статьи</span></a></li></ol></section>
+<section aria-labelledby="latest-h"><h2 id="latest-h">Свежие статьи <span class="count">21</span></h2><ul class="entries"><li><a href="/ru/anime-pohozhie-na-podnyatie-urovnya/"><span class="entry-title">Аниме похожие на «Поднятие уровня»: 7 тайтлов</span><span class="entry-desc">Что смотреть после Solo Leveling: «Башня Бога», Overlord, «Кайдзю № 8» и ещё четыре тайтла. Год, число серий и чем каждый похож на историю Сон Джину.</span></a><time datetime="2026-11-12">12 ноября 2026 г.</time></li><li><a href="/ru/anime-pro-robotov/"><span class="entry-title">Аниме про роботов: меха, андроиды и с чего начать</span><span class="entry-desc">Аниме про роботов бывает трёх видов: супер-роботы, реалистичные роботы и андроиды. 11 тайтлов от Mazinger Z (1972) до Pluto (2023) с годом и числом серий.</span></a><time datetime="2026-11-12">12 ноября 2026 г.</time></li><li><a href="/ru/sootnoshenie-storon-ekrana/"><span class="entry-title">Соотношение сторон экрана: таблица и калькулятор</span><span class="entry-desc">Что значит 16:9, 21:9 и 2,39:1, как узнать соотношение сторон своего экрана по пикселям и сколько места фильм займёт на телевизоре, мониторе или телефоне.</span></a><time datetime="2026-11-12">12 ноября 2026 г.</time></li><li><a href="/ru/anime-pro-demonov/"><span class="entry-title">Аниме про демонов: 9 тайтлов от «Инуяси» до бензопилы</span><span class="entry-desc">Аниме про демонов делятся на японских они и европейских дьяволов с контрактами. Девять тайтлов с годом и числом серий, о чём каждое и с чего начать.</span></a><time datetime="2026-11-11">11 ноября 2026 г.</time></li><li><a href="/ru/grustnye-anime/"><span class="entry-title">Грустные аниме: 9 тайтлов, после которых плачут</span><span class="entry-desc">Грустные аниме по причине слёз: война, утрата, расставание, вина. Девять тайтлов с годом и числом серий, от «Могилы светлячков» до «Вайолет Эвергарден».</span></a><time datetime="2026-11-11">11 ноября 2026 г.</time></li><li><a href="/ru/anime-pro-magiyu/"><span class="entry-title">Аниме про магию: 11 тайтлов о магах и волшебницах</span><span class="entry-desc">Аниме про магию по типам: школы магов, девочки-волшебницы, алхимия, фэнтези-походы. Год, число серий и о чём каждое из 11, плюс с чего начать.</span></a><time datetime="2026-11-10">10 ноября 2026 г.</time></li><li><a href="/ru/chto-takoe-manhva/"><span class="entry-title">Что такое манхва: чем отличается от манги и маньхуа</span><span class="entry-desc">Манхва — корейские комиксы. Читаются слева направо, в сети выходят цветной вертикальной лентой-вебтуном. Отличия от манги и маньхуа, история, главные тайтлы.</span></a><time datetime="2026-11-10">10 ноября 2026 г.</time></li><li><a href="/ru/chto-takoe-pashalka/"><span class="entry-title">Что такое пасхалка: значение слова и примеры</span><span class="entry-desc">Пасхалка — секрет, который авторы спрятали в игре, фильме или программе для самых внимательных. Откуда слово, первая пасхалка Atari и примеры.</span></a><time datetime="2026-11-09">9 ноября 2026 г.</time></li><li><a href="/ru/filmy-pohozhie-na-interstellar/"><span class="entry-title">Фильмы, похожие на «Интерстеллар»: 11 картин</span><span class="entry-desc">Фильмы, похожие на «Интерстеллар»: от «Космической одиссеи 2001 года» до «К звёздам». Год, режиссёр, чем похож каждый и какой смотреть первым.</span></a><time datetime="2026-11-09">9 ноября 2026 г.</time></li><li><a href="/ru/retrofuturizm/"><span class="entry-title">Ретрофутуризм: что это, стили и примеры</span><span class="entry-desc">Ретрофутуризм — будущее, каким его рисовали в прошлом: летающие машины, ракеты, роботы-слуги. Откуда слово, стимпанк, атомпанк и примеры в кино.</span></a><time datetime="2026-11-08">8 ноября 2026 г.</time></li><li><a href="/ru/stimpank-stil/"><span class="entry-title">Стимпанк: что это за стиль, признаки и фильмы</span><span class="entry-desc">Стимпанк — фантастика и стиль, где мир живёт на паре: викторианская эпоха, шестерни, медь, дирижабли. Откуда слово, признаки и фильмы с годами.</span></a><time datetime="2026-11-08">8 ноября 2026 г.</time></li><li><a href="/ru/kiberpank-stil/"><span class="entry-title">Киберпанк стиль: что это и как он выглядит в кино</span><span class="entry-desc">Киберпанк стиль: высокие технологии и низкая жизнь, неон, дождь и мегакорпорации. Откуда он пришёл, по каким признакам узнать и какие фильмы и аниме смотреть.</span></a><time datetime="2026-11-07">7 ноября 2026 г.</time></li></ul></section>
+<section aria-labelledby="shelves-h"><h2 id="shelves-h">Разделы</h2><ol class="shelves"><li><a class="shelf-row" href="/ru/anime/"><span class="reel" aria-hidden="true">2</span><span class="shelf-name">Аниме и манга</span><span class="shelf-count">9 статей</span></a></li><li><a class="shelf-row" href="/ru/kino/"><span class="reel" aria-hidden="true">4</span><span class="shelf-name">Кино</span><span class="shelf-count">6 статей</span></a></li><li><a class="shelf-row" href="/ru/komiksy/"><span class="reel" aria-hidden="true">5</span><span class="shelf-name">Комиксы</span><span class="shelf-count">1 статья</span></a></li><li><a class="shelf-row" href="/ru/zhivopis-i-grafika/"><span class="reel" aria-hidden="true">6</span><span class="shelf-name">Живопись и графика</span><span class="shelf-count">3 статьи</span></a></li><li><a class="shelf-row" href="/ru/formaty-i-zhanry/"><span class="reel" aria-hidden="true">8</span><span class="shelf-name">Форматы и жанры</span><span class="shelf-count">2 статьи</span></a></li></ol></section>
 
 </div><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Где смотреть и следить</h2><p>Пока ничего не вышло. Сериал представлен на сайте студии, а о выходе первой серии сообщит канал в Telegram.</p><ul><li><a class="go" href="https://eldarstudios.com/ru" hreflang="ru" rel="noopener" data-goatcounter-click="studio-home"><span class="go-name">Eldar Brothers Studios</span><span class="go-what">Сайт студии</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">Канал студии</span></a></li></ul></aside></main>
 <footer class="site"><div class="bar">

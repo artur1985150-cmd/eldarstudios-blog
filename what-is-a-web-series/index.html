@@ -79,11 +79,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -91,10 +93,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -113,6 +115,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -225,6 +230,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -253,7 +273,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -296,7 +337,7 @@ footer.site a { color: var(--ink); }
 .calc-chart td:nth-child(n+3) { white-space: nowrap; }
 @media (max-width: 40rem) { .calc-chart td:nth-child(n+3) { white-space: normal; min-width: 7.5rem; } .calc-chart td:nth-child(2) { min-width: 12rem; } }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Formats and genres","item":"https://blog.eldarstudios.com/formats-and-genres/"},{"@type":"ListItem","position":3,"name":"What is a web series? Meaning, length and examples"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/what-is-a-web-series/#article","headline":"What is a web series? Meaning, length and examples","description":"A web series is a run of short episodes, scripted or unscripted, made for the internet. How long episodes run, how it differs from TV, and famous examples.","inLanguage":"en","url":"https://blog.eldarstudios.com/what-is-a-web-series/","mainEntityOfPage":"https://blog.eldarstudios.com/what-is-a-web-series/","datePublished":"2026-11-03","dateModified":"2026-11-03","wordCount":1245,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://en.wikipedia.org/wiki/Web_series","https://websoda.uvic.ca/web-series-a-definition/","https://www.televisionacademy.com/features/news/press-releases/television-academy-expands-short-form-categories-and-increases-directing-and","https://en.wikipedia.org/wiki/The_Lizzie_Bennet_Diaries","https://en.wikipedia.org/wiki/Broad_City","https://en.wikipedia.org/wiki/Dr._Horrible%27s_Sing-Along_Blog"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between a web series and a TV series?","acceptedAnswer":{"@type":"Answer","text":"Mostly scale and home. A web series is made for websites and apps, has shorter episodes and a much smaller budget. A TV series is made for a channel or a streaming service, with episodes of roughly 30 to 60 minutes. Some web series later get picked up by TV."}},{"@type":"Question","name":"Is a Netflix show a web series?","acceptedAnswer":{"@type":"Answer","text":"Usually not in the US or UK sense. Shows made for Netflix or Prime Video are called streaming series, with full-length episodes. In India, though, \"web series\" is the common name for streaming shows of any episode length."}},{"@type":"Question","name":"How many episodes does a web series have?","acceptedAnswer":{"@type":"Answer","text":"There is no fixed number. Dr. Horrible's Sing-Along Blog had three acts of about 14 minutes each, while The Lizzie Bennet Diaries ran to 100 episodes. Many web festivals ask for two or three finished episodes before they accept a submission."}},{"@type":"Question","name":"What is a webisode?","acceptedAnswer":{"@type":"Answer","text":"A webisode is one episode of a web series. The word is simply \"web\" plus \"episode\" and is used for the same thing as an episode on TV."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Formats and genres","item":"https://blog.eldarstudios.com/formats-and-genres/"},{"@type":"ListItem","position":3,"name":"What is a web series? Meaning, length and examples"}]},{"@type":"BlogPosting","@id":"https://blog.eldarstudios.com/what-is-a-web-series/#article","headline":"What is a web series? Meaning, length and examples","description":"A web series is a run of short episodes, scripted or unscripted, made for the internet. How long episodes run, how it differs from TV, and famous examples.","inLanguage":"en","url":"https://blog.eldarstudios.com/what-is-a-web-series/","mainEntityOfPage":"https://blog.eldarstudios.com/what-is-a-web-series/","datePublished":"2026-11-03","dateModified":"2026-11-03","wordCount":1328,"author":{"@id":"https://blog.eldarstudios.com/#org"},"publisher":{"@id":"https://blog.eldarstudios.com/#org"},"citation":["https://en.wikipedia.org/wiki/Web_series","https://websoda.uvic.ca/web-series-a-definition/","https://www.televisionacademy.com/features/news/press-releases/television-academy-expands-short-form-categories-and-increases-directing-and","https://en.wikipedia.org/wiki/The_Lizzie_Bennet_Diaries","https://en.wikipedia.org/wiki/Broad_City","https://en.wikipedia.org/wiki/Dr._Horrible%27s_Sing-Along_Blog"]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the difference between a web series and a TV series?","acceptedAnswer":{"@type":"Answer","text":"Mostly scale and home. A web series is made for websites and apps, has shorter episodes and a much smaller budget. A TV series is made for a channel or a streaming service, with episodes of roughly 30 to 60 minutes. Some web series later get picked up by TV."}},{"@type":"Question","name":"Is a Netflix show a web series?","acceptedAnswer":{"@type":"Answer","text":"Usually not in the US or UK sense. Shows made for Netflix or Prime Video are called streaming series, with full-length episodes. In India, though, \"web series\" is the common name for streaming shows of any episode length."}},{"@type":"Question","name":"How many episodes does a web series have?","acceptedAnswer":{"@type":"Answer","text":"There is no fixed number. Dr. Horrible's Sing-Along Blog had three acts of about 14 minutes each, while The Lizzie Bennet Diaries ran to 100 episodes. Many web festivals ask for two or three finished episodes before they accept a submission."}},{"@type":"Question","name":"What is a webisode?","acceptedAnswer":{"@type":"Answer","text":"A webisode is one episode of a web series. The word is simply \"web\" plus \"episode\" and is used for the same thing as an episode on TV."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -304,7 +345,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/"><span class="tape">Eldar Brothers Studios Blog</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
 <nav class="shelf-index" aria-label="Sections"><ul><li><a href="/cartoons/">Cartoons</a></li><li><a href="/anime/">Anime and manga</a></li><li><a href="/stop-motion-and-3d/">Stop motion, clay and 3D</a></li><li><a href="/film/">Film</a></li><li><a href="/comics/">Comics</a></li><li><a href="/painting-and-graphics/">Painting and graphics</a></li><li><a href="/aesthetics/">Aesthetics</a></li><li><a href="/formats-and-genres/">Formats and genres</a></li><li><a href="/productions/">Productions</a></li><li><a href="/how-we-make-it/">How we make it</a></li><li><a href="/about/">About</a></li></ul></nav>
 </div>
 </header>
@@ -315,7 +356,7 @@ footer.site a { color: var(--ink); }
 <p class="plate-shelf"><span class="reel" aria-hidden="true">8</span><a href="/formats-and-genres/">Formats and genres</a></p>
 <h1>What is a web series? Meaning, length and examples</h1>
 
-<dl class="plate-facts"><div><dt>Published</dt><dd><time datetime="2026-11-03">3 November 2026</time></dd></div><div><dt>Checked</dt><dd><time datetime="2026-11-03">3 November 2026</time></dd></div><div><dt>Reading</dt><dd>5 min</dd></div><div><dt>Sources</dt><dd><a href="#sources">6 named</a></dd></div></dl>
+<dl class="plate-facts"><div><dt>Published</dt><dd><time datetime="2026-11-03">3 November 2026</time></dd></div><div><dt>Checked</dt><dd><time datetime="2026-11-03">3 November 2026</time></dd></div><div><dt>Reading</dt><dd>6 min</dd></div><div><dt>Sources</dt><dd><a href="#sources">6 named</a></dd></div></dl>
 </header>
 <div class="layout"><div class="margin"><nav class="contents wide" aria-labelledby="contents-h"><h2 id="contents-h">In this article</h2><ol><li><a href="#what-is-a-web-series-in-plain-words">What is a web series, in plain words?</a></li><li><a href="#how-long-is-a-web-series-episode">How long is a web series episode?</a></li><li><a href="#web-series-tv-series-streaming-series-what-s-the-difference">Web series, TV series, streaming series: what&amp;#39;s the difference?</a></li><li><a href="#what-counts-as-a-web-series">What counts as a web series?</a></li><li><a href="#where-did-web-series-come-from">Where did web series come from?</a></li><li><a href="#which-famous-shows-started-as-web-series">Which famous shows started as web series?</a></li><li><a href="#do-web-series-win-awards">Do web series win awards?</a></li><li><a href="#what-other-formats-and-story-terms-should-you-know">What other formats and story terms should you know?</a></li></ol></nav><details class="contents narrow"><summary>In this article <span class="count">8 sections</span></summary><ol><li><a href="#what-is-a-web-series-in-plain-words">What is a web series, in plain words?</a></li><li><a href="#how-long-is-a-web-series-episode">How long is a web series episode?</a></li><li><a href="#web-series-tv-series-streaming-series-what-s-the-difference">Web series, TV series, streaming series: what&amp;#39;s the difference?</a></li><li><a href="#what-counts-as-a-web-series">What counts as a web series?</a></li><li><a href="#where-did-web-series-come-from">Where did web series come from?</a></li><li><a href="#which-famous-shows-started-as-web-series">Which famous shows started as web series?</a></li><li><a href="#do-web-series-win-awards">Do web series win awards?</a></li><li><a href="#what-other-formats-and-story-terms-should-you-know">What other formats and story terms should you know?</a></li></ol></details></div><div class="column"><section class="short" aria-labelledby="short-h"><h2 id="short-h">In short</h2><ul><li>A web series is a set of short episodes, scripted or unscripted, released on the internet instead of on TV.</li><li>Episodes usually run 3 to 15 minutes; web festivals often cap them at 20 minutes.</li><li>Early examples include The Spot (1995), Homestar Runner (2000) and Red vs. Blue; Broad City started as a web series before Comedy Central.</li><li>In 2013 The Lizzie Bennet Diaries became the first web series to win an Emmy.</li></ul></section><div class="prose"><p>A web series is a run of short episodes, scripted or unscripted, made for the internet and released on sites and apps such as YouTube, Vimeo or TikTok instead of on a TV channel. Episodes are short, usually 3 to 15 minutes, and budgets are far smaller than in television. One episode is often called a webisode. The form appeared in the mid-1990s and grew fast once broadband made online video practical.</p>
 <h2 id="what-is-a-web-series-in-plain-words">What is a web series, in plain words?</h2>
@@ -421,6 +462,7 @@ footer.site a { color: var(--ink); }
 <h2 id="do-web-series-win-awards">Do web series win awards?</h2>
 <p>Yes, at their own ceremonies and at the big ones. The Webby Awards date from 1996, the Streamy Awards began in 2009, and the IAWTV Awards followed in 2012. The Emmys, Canadian Screen Awards and BAFTA all now have short-form categories.</p>
 <p>Festivals run the other side of it. Wikipedia lists Melbourne WebFest, Seoul Webfest, Webfest Berlin, NYC Web Fest, LA Web Fest and Vancouver Web Fest among them. Most ask for two or three finished episodes, which is a fair hint at what the industry treats as the minimum for a &quot;series.&quot;</p>
+<p>Web series borrow old serial habits, such as ending each episode on a cliffhanger. Some tell a new story every episode, which makes them an anthology series. Network TV tests a show with a single trial episode first; see what a pilot episode is. And feature films have their own trick: a MacGuffin is the object everyone chases, even though what it is barely matters.</p>
 <h2 id="what-other-formats-and-story-terms-should-you-know">What other formats and story terms should you know?</h2>
 <p>A web series is a container, and the stories inside it borrow tools from older forms. Many short shows end each episode on a reveal, so it helps to know <a href="/what-is-a-plot-twist/">what a plot twist is</a> and how it differs from a cliffhanger.</p>
 <p>Horror online has its own tradition of short scary stories passed from site to site; read <a href="/what-is-creepypasta/">what creepypasta is</a> for that side of internet storytelling.</p>

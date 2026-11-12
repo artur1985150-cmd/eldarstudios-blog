@@ -79,11 +79,13 @@ header.site { background: var(--edge); color: #f2f4f4; }
   height: 14px;
   background: radial-gradient(circle at 50% 50%, var(--ground) 0 3.2px, transparent 3.6px) 0 0 / 18px 14px repeat-x;
 }
+/* Flex, not grid (11.11.2026): with the text enlarged to 200 % the controls did not fit
+   beside the name and pushed the page sideways; now they wrap under it. */
 header.site .bar {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 0.75rem 1rem;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem 1rem;
   max-width: 76rem; margin: 0 auto; padding: 0.75rem var(--gutter) 0;
 }
-.brand { text-decoration: none; min-width: 0; }
+.brand { text-decoration: none; flex: 1 1 0; min-width: min(8rem, 100%); }
 .tape {
   display: inline-block; background: var(--label); color: var(--ink);
   font: 700 1.125rem/1.2 var(--frame); letter-spacing: 0.01em; text-transform: uppercase;
@@ -91,10 +93,10 @@ header.site .bar {
 }
 :root[data-theme="dark"] .tape { background: #e9edec; color: #182023; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tape { background: #e9edec; color: #182023; } }
-.controls { display: flex; gap: 0.5rem; align-items: center; justify-self: end; }
+.controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: flex-end; margin-inline-start: auto; }
 
 /* the shelf index: plain links; the current shelf carries a folded tape flag */
-.shelf-index { grid-column: 1 / -1; }
+.shelf-index { flex: 1 1 100%; }
 .shelf-index ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.25rem; }
 .shelf-index a {
   display: block; padding: 0.6rem 0.7rem 0.55rem; text-decoration: none; color: #dfe5e6;
@@ -113,6 +115,9 @@ header.site .bar {
   display: inline-flex; border: 1px solid #7d8b90; background: transparent; padding: 0; cursor: pointer;
   font: 600 0.875rem/1 var(--frame); text-transform: uppercase; letter-spacing: 0.04em; color: #dfe5e6; min-height: 2.25rem;
 }
+/* The switch only works with its script: without it the page follows the system theme
+   and the button stays hidden (display above would override the hidden attribute). */
+.theme[hidden] { display: none; }
 .leader { padding: 0.6rem 0.65rem; }
 .theme[aria-pressed="false"] .head, .theme[aria-pressed="true"] .tail { background: #f2f4f4; color: #182023; }
 .langs { position: relative; font: 600 0.9375rem/1 var(--frame); }
@@ -225,6 +230,21 @@ ul.plain { padding-inline-start: 1.1rem; }
 .go-name { font: 700 1.25rem/1.2 var(--frame); }
 .go-what { color: var(--ink-2); font-size: 1rem; }
 
+/* ---------- layout v2 (config/site.json → layout_v2): the box next to the answer ---------- */
+/* A small lid label: the series name, two lines on what it is and for whom, one action. */
+.lid-near { margin: 1.5rem 0 2rem; background: var(--label); border: 1px solid var(--rule); border-inline-start: 4px solid var(--edge); padding: 1rem 1.25rem 1.1rem; max-width: 54rem; display: grid; gap: 0.4rem; justify-items: start; }
+.prose .lid-near p, .lid-near p { margin: 0; }
+.lid-near-name { font: 700 1.25rem/1.2 var(--frame); }
+.prose .lid-near-text, .lid-near-text { color: var(--ink-2); font-size: 1rem; line-height: 1.5; max-width: 60ch; }
+.go-one { display: inline-flex; align-items: center; min-height: 44px; margin-block-start: 0.35rem; padding: 0.55rem 1rem; border: 1px solid var(--ink); background: var(--sheet); color: var(--ink); font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; text-decoration: none; }
+.go-one:hover { border-color: var(--mark); box-shadow: 0 2px 10px rgb(0 0 0 / 0.12); }
+.shelf.home > .lid-near { margin-block: 0 2.25rem; }
+.shelves li:has(.shelf-start) .shelf-row { border-block-end: 0; padding-block-end: 0.25rem; }
+.shelf-start { display: block; min-height: 44px; padding-block: 0.15rem 0.75rem; padding-inline: calc(3.25rem + 1rem) 0; border-block-end: 1px solid var(--rule); font: 500 1rem/1.35 var(--frame); text-decoration: none; }
+.shelf-start-label { display: block; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.shelf-start-title { text-decoration: underline; text-decoration-color: var(--mark); text-underline-offset: 0.2em; }
+.shelf-start:hover .shelf-start-title { text-decoration-thickness: 0.16em; }
+
 /* ---------- footer ---------- */
 footer.site { border-block-start: 1px solid var(--rule); background: var(--sheet); }
 footer.site .bar { max-width: 76rem; margin: 0 auto; padding: 1.5rem var(--gutter) 2.5rem; font-size: 1rem; color: var(--ink-2); }
@@ -253,7 +273,28 @@ footer.site a { color: var(--ink); }
   .shelf-index a { padding: 0.55rem 0.5rem; font-size: 0.9375rem; }
   .shelf-row { grid-template-columns: 2.5rem minmax(0, 1fr); }
   .shelf-row .shelf-count { grid-column: 2; }
+  .shelf-start { padding-inline-start: calc(2.5rem + 1rem); }
   .reel { font-size: 2rem; }
+}
+/* Fingers: on phone sizes (and any touch screen, and short landscape phones) every link,
+   button and disclosure outside running text is at least 44 × 44 px (Apple HIG 44 pt;
+   WCAG 2.5.5). config/devices.json → tap_target_min_px is what tests/pages.mjs checks. */
+@media (max-width: 47.99rem), (pointer: coarse), (max-height: 30rem) {
+  .brand { display: inline-flex; align-items: center; min-height: 44px; }
+  .langs summary, .theme { min-height: 44px; display: inline-flex; align-items: center; }
+  .langs li a, .langs li span { display: flex; align-items: center; min-height: 44px; }
+  .shelf-index a { display: flex; align-items: center; min-height: 44px; min-width: 44px; justify-content: center; }
+  .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .crumbs ol { align-items: center; }
+  ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  ul.plain li { margin: 0; }
+  .contents.narrow { padding-block: 0; }
+  .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
+  .contents.narrow ol { margin-block: 0 0.5rem; }
+  .contents.narrow li { margin-block-end: 0; }
+  .faq details { padding: 0; }
+  .faq summary { min-height: 44px; padding-block: 0.6rem; }
+  .faq p { margin: 0 0 0.75rem; }
 }
 @media (prefers-reduced-motion: no-preference) {
   .cans a, .go, .shelf-index a { transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -304,7 +345,7 @@ footer.site a { color: var(--ink); }
 <div class="edge" aria-hidden="true"></div>
 <div class="bar">
 <a class="brand" href="/"><span class="tape">Eldar Brothers Studios Blog</span></a>
-<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
+<div class="controls"><details class="langs"><summary><span class="sr">Language: </span><span lang="en">English</span></summary><ul><li><span class="lang-here" lang="en" dir="ltr" aria-current="true">English</span></li><li><a class="lang" href="/es/" hreflang="es" lang="es" dir="ltr" data-goatcounter-click="lang-es">Español</a></li><li><a class="lang" href="/ru/" hreflang="ru" lang="ru" dir="ltr" data-goatcounter-click="lang-ru">Русский</a></li></ul></details><button class="theme" type="button" hidden aria-label="Night pages" aria-pressed="false"><span class="leader head" aria-hidden="true">Day</span><span class="leader tail" aria-hidden="true">Night</span></button></div>
 <nav class="shelf-index" aria-label="Sections"><ul><li><a href="/cartoons/">Cartoons</a></li><li><a href="/anime/">Anime and manga</a></li><li><a href="/stop-motion-and-3d/">Stop motion, clay and 3D</a></li><li><a href="/film/">Film</a></li><li><a href="/comics/">Comics</a></li><li><a href="/painting-and-graphics/">Painting and graphics</a></li><li><a href="/aesthetics/">Aesthetics</a></li><li><a href="/formats-and-genres/">Formats and genres</a></li><li><a href="/productions/">Productions</a></li><li><a href="/how-we-make-it/">How we make it</a></li><li><a href="/about/">About</a></li></ul></nav>
 </div>
 </header>
@@ -349,7 +390,7 @@ footer.site a { color: var(--ink); }
 <p>Taylor Swift&#39;s 2020 album <em>Folklore</em> is credited with pushing cottagecore into the mainstream. She kept the mood on <em>Evermore</em>, released the same year, and on stage at the 63rd Grammy Awards. The music videos for &quot;Cardigan&quot; and &quot;Willow&quot; both use cottagecore imagery.</p>
 <p>Games got there too. The New York Times compared cottagecore to <em>Animal Crossing</em> acted out in real life, just as <em>Animal Crossing: New Horizons</em> was a hit. In July 2021 <em>The Sims 4</em> released an expansion pack called &quot;Cottage Living&quot;, with gardening, floral prints and animals such as chickens and llamas.</p>
 <h2 id="how-does-cottagecore-compare-with-vaporwave-and-y2k">How does cottagecore compare with vaporwave and Y2K?</h2>
-<p>Cottagecore, vaporwave and the Y2K aesthetic are all internet aesthetics built on nostalgia. The difference is the past each one longs for: a rural idyll, the shopping-mall 1980s and 1990s, or the shiny tech optimism around the year 2000.</p>
+<p>Cottagecore, <a href="/vaporwave/">vaporwave</a> and the <a href="/y2k-aesthetic/">Y2K aesthetic</a> are all internet aesthetics built on nostalgia. The difference is the past each one longs for: a rural idyll, the shopping-mall 1980s and 1990s, or the shiny tech optimism around the year 2000.</p>
 <div class="table-wrap" tabindex="0"><table>
 <thead>
 <tr>
@@ -447,7 +488,7 @@ footer.site a { color: var(--ink); }
 <p>Paula Sutton answered the criticism in her BBC interview. Her parents arrived in England from Grenada with nothing, she said, and baked their own bread, grew vegetables and cooked from scratch. For her the heart of cottagecore is a simple, beautiful life, and that excludes no one.</p>
 
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What does cottagecore mean?</summary><p>It means an online aesthetic that celebrates a simple country life: a small cottage, a garden, home baking, handmade things and vintage clothes. The '-core' ending, as BBC Bitesize puts it, just means an intense interest in something.</p></details><details><summary>When did cottagecore start?</summary><p>The word was first used on Tumblr in 2018. The look it describes is much older, going back to pastoral poetry and the Arts and Crafts movement. It became a mass trend in 2020, during the COVID-19 lockdowns.</p></details><details><summary>Is Studio Ghibli cottagecore?</summary><p>Studio Ghibli is an animation studio, not part of the aesthetic, but its films are among the most shared images in cottagecore circles. A 2020 essay in The Skinny argued that Ghibli now feels as much an aesthetic as a studio, pointing to Kiki, Chihiro and Howl's breakfast scene.</p></details><details><summary>Do you need to live in the countryside to be cottagecore?</summary><p>No. BBC Bitesize notes that many people show their cottagecore life from a balcony, a box room or a basement. The aesthetic is about simple pleasures and well-made things more than an address.</p></details><details><summary>What is the difference between cottagecore and vaporwave?</summary><p>Cottagecore looks back to an imagined rural past of gardens, linen and bread. Vaporwave looks back to the consumer technology of the 1980s and 1990s: shopping malls, early computers, slowed-down music and neon color. Both are nostalgic, but for very different worlds.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Cottagecore" rel="noopener">Cottagecore</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://www.bbc.co.uk/bitesize/articles/zygbsk7" rel="noopener">What's it like to be 'cottagecore'?</a>, BBC Bitesize. Checked 31 October 2026</li><li><a href="https://www.theskinny.co.uk/film/opinion/studio-ghibli-cottagecore-inclusivity" rel="noopener">Studio Ghibli, Cottagecore &amp; Inclusivity</a>, The Skinny. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Vaporwave" rel="noopener">Vaporwave</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Y2K_aesthetic" rel="noopener">Y2K aesthetic</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
-</div></div>
+<section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/vaporwave/"><span class="entry-title">Vaporwave: the music, the art and where it came from</span><span class="entry-desc">Vaporwave is an internet music genre and visual aesthetic from the early 2010s: slowed-down 1980s samples, Greek statues, old Windows and pink neon.</span></a><time datetime="2026-11-12">12 November 2026</time></li><li><a href="/y2k-aesthetic/"><span class="entry-title">Y2K aesthetic: the look of the year 2000, explained</span><span class="entry-desc">The Y2K aesthetic is the shiny, tech-optimistic style of the late 1990s and early 2000s: chrome, translucent plastic, pop videos, revived online in the 2020s.</span></a><time datetime="2026-11-12">12 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>
 <footer class="site"><div class="bar">
 <p class="ai-note">Written with the help of an AI model and checked against the sources listed under each article. The studio's own series are made with AI too. <a href="/how-we-make-it/">How we make it</a></p>
