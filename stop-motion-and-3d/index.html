@@ -323,6 +323,11 @@ footer.site a { color: var(--ink); }
 .calc-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 0.75rem 1rem; margin: 0 0 1rem; }
 .calc label { display: block; font: 600 1rem/1.3 var(--frame); margin: 0 0 0.35rem; }
 .calc select, .calc input { width: 100%; min-height: 44px; font: 400 1.0625rem/1.3 var(--read); color: var(--ink); background: var(--sheet); border: 1px solid var(--ink-2); border-radius: 0; padding: 0.45rem 0.6rem; }
+/* Safari on iPhone ignores min-height on a native select (it stayed 29 px, found 11.11.2026),
+   so the select draws its own arrow; forced colours get the system control back. */
+.calc select { -webkit-appearance: none; appearance: none; padding-inline-end: 2rem; background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%); background-position: calc(100% - 1.1rem) 52%, calc(100% - 0.75rem) 52%; background-size: 0.35rem 0.35rem; background-repeat: no-repeat; }
+:dir(rtl) .calc select { background-position: 0.75rem 52%, 1.1rem 52%; }
+@media (forced-colors: active) { .calc select { -webkit-appearance: auto; appearance: auto; } }
 .calc input[aria-invalid="true"] { border-color: var(--mark); border-width: 2px; }
 .calc button { font: 700 1rem/1.2 var(--frame); letter-spacing: 0.02em; color: var(--mark-ink); background: var(--mark); border: 1px solid var(--mark); border-radius: 0; padding: 0.65rem 1.1rem; min-height: 44px; cursor: pointer; }
 .calc button:hover { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
