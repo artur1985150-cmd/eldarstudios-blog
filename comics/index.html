@@ -15,6 +15,7 @@
 <meta property="og:description" content="Comics on screen: motion comics, ligne claire, noir and the printed page.">
 <meta property="og:url" content="https://blog.eldarstudios.com/comics/">
 <meta property="og:site_name" content="Eldar Brothers Studios Blog">
+
 <meta name="color-scheme" content="light dark">
 <link rel="alternate" type="application/rss+xml" title="Eldar Brothers Studios Blog" href="/feed.xml">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -343,6 +344,19 @@ footer.site a { color: var(--ink); }
 .calc-chart h3 { margin-block-start: 0; }
 .calc-chart td:nth-child(n+3) { white-space: nowrap; }
 @media (max-width: 40rem) { .calc-chart td:nth-child(n+3) { white-space: normal; min-width: 7.5rem; } .calc-chart td:nth-child(2) { min-width: 12rem; } }
+
+/* The scheme inside an article (scripts/images.mjs): one picture drawn from the article's own
+   list or table, light and dark files; the one for the current theme shows. */
+.scheme { margin: 1.75rem 0; }
+.scheme a { display: block; }
+.scheme img { display: block; width: 100%; height: auto; }
+.scheme .scheme-dark { display: none; }
+:root[data-theme="dark"] .scheme .scheme-light { display: none; }
+:root[data-theme="dark"] .scheme .scheme-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .scheme .scheme-light { display: none; }
+  :root:not([data-theme="light"]) .scheme .scheme-dark { display: block; }
+}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://blog.eldarstudios.com/#website","url":"https://blog.eldarstudios.com/","name":"Eldar Brothers Studios Blog","inLanguage":"en","publisher":{"@id":"https://blog.eldarstudios.com/#org"}},{"@type":"Organization","@id":"https://blog.eldarstudios.com/#org","name":"Eldar Brothers Studios","url":"https://eldarstudios.com/","sameAs":["https://t.me/eldarstudios"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://blog.eldarstudios.com/"},{"@type":"ListItem","position":2,"name":"Comics"}]},{"@type":"CollectionPage","name":"Comics","url":"https://blog.eldarstudios.com/comics/","inLanguage":"en","hasPart":[{"@id":"https://blog.eldarstudios.com/animated-comics/#article"},{"@id":"https://blog.eldarstudios.com/what-is-a-manhwa/#article"}]}]}</script>
 </head>
