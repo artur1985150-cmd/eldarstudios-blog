@@ -289,6 +289,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }

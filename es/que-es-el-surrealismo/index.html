@@ -296,6 +296,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
@@ -417,7 +419,7 @@ footer.site a { color: var(--ink); }
 <p>La animación puede hacer lo que la cámara no: cambiar la forma de un objeto delante de tus ojos. Por eso el surrealismo encaja tan bien en ella. Hay dos nombres que conviene conocer: Destino, el corto de Dalí y Disney, y el cineasta checo Jan Švankmajer.</p>
 <p>Dalí y el artista de Disney John Hench trabajaron en los guiones gráficos de Destino durante ocho meses entre 1945 y 1946, pero el proyecto se detuvo. En 1999 Roy E. Disney lo rescató, y el estudio de Disney en París lo terminó en 2003. Dura unos siete minutos, se estrenó en el festival de Annecy y fue nominado al Óscar.</p>
 <p>Švankmajer, nacido en Praga en 1934, se define a sí mismo dentro de la tradición surrealista. Mezcla stop motion e imagen real con muñecos, arcilla y esqueletos de animales, y su largometraje Alicia (1988) adapta el libro de Lewis Carroll. Estas técnicas se explican en <a href="/es/tipos-de-animacion/">tipos de animación</a>.</p>
-<p>Antes de los surrealistas, el <a href="/es/que-es-el-renacimiento/">Renacimiento</a> había fijado la perspectiva, el impresionismo había sacado la pintura al aire libre, el expresionismo ya deformaba la realidad para mostrar emociones y el cubismo había roto la perspectiva única. A principios del siglo XX nació el arte abstracto, y después la idea pasó por delante del objeto en el arte conceptual.</p>
+<p>Antes de los surrealistas, el <a href="/es/que-es-el-renacimiento/">Renacimiento</a> había fijado la perspectiva, el impresionismo había sacado la pintura al aire libre, el expresionismo ya deformaba la realidad para mostrar emociones y el cubismo había roto la perspectiva única. A principios del siglo XX nació el <a href="/es/que-es-el-arte-abstracto/">arte abstracto</a>, y después la idea pasó por delante del objeto en el arte conceptual.</p>
 <h2 id="surrealismo-y-realismo-magico">Surrealismo y realismo mágico</h2>
 <p>Los dos se confunden a menudo, y la duda aparece hasta en las sugerencias del buscador. La diferencia está en qué hacen con lo extraño.</p>
 <div class="table-wrap" tabindex="0"><table>

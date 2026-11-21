@@ -294,6 +294,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
@@ -443,8 +445,7 @@ footer.site a { color: var(--ink); }
 <td>Spy x Family (since 2019)</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t1">HTML code</label>
@@ -491,7 +492,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-shonen/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Weekly Shonen Magazine and Shonen Sunday, both launched in 1959, were the first weekly shonen magazines. Jump arrived in 1968 and became the best-selling manga magazine of any category, a position it still holds.</p>
 <h2 id="famous-shonen-series-and-where-they-ran">Famous shonen series and where they ran</h2>
 <p>Most of the anime people call &quot;typical shonen&quot; came out of Weekly Shonen Jump. The magazine line is what makes each of these shonen, whatever their tone:</p>
@@ -559,8 +560,7 @@ footer.site a { color: var(--ink); }
 <td>since 2020</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t2">HTML code</label>
@@ -632,7 +632,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-shonen/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Frieren is a good reminder that shonen is not only fights. It follows an elf mage who returns fifty years after her party&#39;s quest and finds her human friends grown old. It runs in a boys&#39; weekly and won the 2024 Kodansha Manga Award in the shonen category.</p>
 <h2 id="dark-series-that-are-still-shonen">Dark series that are still shonen</h2>
 <p>A grim story does not move a series into seinen. Attack on Titan, where humanity hides behind walls from giant man-eating Titans, ran in Bessatsu Shonen Magazine from start to finish. Death Note, about a high school student whose notebook kills anyone whose name he writes in it, ran in Weekly Shonen Jump. Both are shonen.</p>
@@ -669,8 +669,7 @@ footer.site a { color: var(--ink); }
 <td>adult women</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t3">HTML code</label>
@@ -707,12 +706,11 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-shonen/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t3" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t3" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Since the 1980s, shonen and shojo have borrowed from each other. The large expressive eyes associated with shojo became common in shonen, and so did shojo panel montages. Female characters also got bigger roles, and more women began to write and draw shonen series. For the wider picture of how these categories carry over to screen, see <a href="/what-is-anime/">what anime is</a> or browse our <a href="/anime/">anime section</a>.</p>
 <h2 id="where-shonen-came-from">Where shonen came from</h2>
 <p>Japan&#39;s boys&#39; magazines are older than manga as we know it. Shonen Sekai, the first youth magazine, launched in 1895 for boys and girls alike. Girls&#39; magazines split off in 1902, and boys&#39; titles followed. Shonen Pakku, from 1907, was the first boys&#39; magazine to print manga, and Shonen Club followed in 1914.</p>
 <p>After the war, Osamu Tezuka&#39;s long, cinematic &quot;story manga&quot; such as Astro Boy changed what boys&#39; comics could be. The 1959 weeklies and the 1968 launch of Jump built the modern market. In the 1980s, battle manga took over with Fist of the North Star and Dragon Ball, and critic Jason Thompson credits Dragon Ball with the cartoonish art style many shonen hits still use. The same magazine check works for newer labels too, from <a href="/what-is-isekai/">isekai</a> fantasy to <a href="/what-is-chibi/">chibi-style</a> comedy: the story type and the reader category are two different questions.</p>
-
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What does shonen mean in anime?</summary><p>It means the anime is based on, or made in the style of, manga aimed at teenage boys. The Japanese word 少年 means 'young boy'. Most shonen anime are adaptations of series from shonen magazines, so the label really describes the target reader of the original magazine, not the content of the show.</p></details><details><summary>Is shonen a genre?</summary><p>No. Shonen is a demographic category used by Japanese publishers. Inside it you find many genres: battle stories, sports, comedy, romance, horror and slice of life. Dictionary.com calls it a subgenre of anime or manga aimed at boys, which is how many English speakers use the word, but publishers sort by magazine, not by plot.</p></details><details><summary>Is Attack on Titan shonen or seinen?</summary><p>Shonen. Hajime Isayama's manga ran in Kodansha's Bessatsu Shonen Magazine from 2009 to 2021. Its violence makes many viewers guess seinen, but the category comes from the magazine, and Bessatsu Shonen Magazine is a shonen title.</p></details><details><summary>What is the most famous shonen magazine?</summary><p>Weekly Shonen Jump, published by Shueisha since 1968. It is the best-selling manga magazine across all categories, and it published Dragon Ball, Slam Dunk, Naruto, Bleach and One Piece. Shueisha's English site singles Jump out as very popular in Japan and overseas.</p></details><details><summary>Can girls and adults read shonen?</summary><p>Yes, and they do. The target reader is a boy of roughly 10 to 19 or 12 to 21, depending on the study, but the real readership covers all ages and genders. A 2006 survey of female manga readers found that Weekly Shonen Jump was their favorite magazine.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Sh%C5%8Dnen_manga" rel="noopener">Shōnen manga</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://www.shueisha.co.jp/english/" rel="noopener">Company Information</a>, Shueisha. Checked 31 October 2026</li><li><a href="https://www.shonenjump.com/j/" rel="noopener">Weekly Shonen Jump official site</a>, Shueisha. Checked 31 October 2026</li><li><a href="https://www.dictionary.com/browse/shonen" rel="noopener">Shonen</a>, Dictionary.com. Checked 31 October 2026</li><li><a href="https://afternoon.kodansha.co.jp/" rel="noopener">Afternoon official site</a>, Kodansha. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Attack_on_Titan" rel="noopener">Attack on Titan</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Vinland_Saga_(manga)" rel="noopener">Vinland Saga (manga)</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Chainsaw_Man" rel="noopener">Chainsaw Man</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Frieren" rel="noopener">Frieren</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
 <section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/what-is-seinen/"><span class="entry-title">What is seinen? Manga and anime for young men</span><span class="entry-desc">Seinen is manga for young adult men, sold in magazines like Young Jump, Morning and Big Comic. How it differs from shonen, with examples and their magazines.</span></a><time datetime="2026-11-15">15 November 2026</time></li><li><a href="/what-is-anime/"><span class="entry-title">What is anime? Meaning, history and where to start</span><span class="entry-desc">Anime is animation made in Japan. Where the word comes from, how to recognize the style, key dates from 1917 to Spirited Away, and which shows to start with.</span></a><time datetime="2026-11-09">9 November 2026</time></li><li><a href="/what-is-manga/"><span class="entry-title">What is manga? Meaning, history and how to read it</span><span class="entry-desc">Manga are comics from Japan, usually black and white and read right to left. What the word means, how manga is published, key dates and where to start.</span></a><time datetime="2026-11-11">11 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>

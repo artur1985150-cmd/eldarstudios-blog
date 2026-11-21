@@ -294,6 +294,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
@@ -429,8 +431,7 @@ footer.site a { color: var(--ink); }
 <td>Exaggerated</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t1">HTML code</label>
@@ -477,7 +478,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-chibi/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
 </details><p>The animator Gen Sato, author of a how-to-draw book on super deformed characters, set the head-to-body ratio between 1:1 and 4:1, according to Tofugu. He also noted that the facial features tend to gather toward the center of the face.</p>
 <h2 id="why-do-anime-characters-suddenly-turn-chibi">Why do anime characters suddenly turn chibi?</h2>
 <p>A sudden switch to chibi is a visual punchline. Dictionary.com describes the style as a way to emphasize changes in mood or call attention to the punchline of a joke. Wikipedia&#39;s anime article lists chibi among the recurring sight gags used to show confusion or embarrassment.</p>
@@ -509,8 +510,7 @@ footer.site a { color: var(--ink); }
 <td>Bandai launches SD Gundam World capsule toys, and the term super deformed enters Japanese</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t2">HTML code</label>
@@ -542,7 +542,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-chibi/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Yokoi based his small Gundams on the mini Godzilla and mini Ultraman that Akira Toriyama drew in Dr. Slump. Some people at Bandai felt the cute Gundams hurt the integrity of a serious franchise. The toys were a hit anyway, and &quot;chibi kyara&quot; followed &quot;super deformed&quot; into the language soon after.</p>
 <h2 id="how-did-chibi-reach-english-speaking-fans">How did chibi reach English-speaking fans?</h2>
 <p>Mostly through Sailor Moon. Its character Chibiusa, a pet name for the daughter of Sailor Moon built from Chibi Usagi, &quot;little rabbit,&quot; brought the word to American fans in the mid-1990s, according to Wikipedia. Dictionary.com also credits the 1990s anime and manga Sailor Moon with spreading the popular sense of chibi in English.</p>
@@ -553,7 +553,6 @@ footer.site a { color: var(--ink); }
 <h2 id="where-can-you-see-chibi-in-anime-and-manga">Where can you see chibi in anime and manga?</h2>
 <p>Almost everywhere. Tofugu notes that nearly every popular character, from One Piece to Dragon Ball, has an SD version, official or made by fans. You will find chibi in comic relief scenes of anime, in <a href="/what-is-manga/">manga</a> and, above all, in merchandise such as figures and capsule toys.</p>
 <p>The style belongs to the wider Japanese idea of kawaii, or cuteness, which is one reason it sells so well as merchandise. For the bigger picture of how chibi fits into anime drawing, start with our guide to <a href="/what-is-anime/">what anime is</a>, browse other <a href="/art-styles/">art styles</a>, or see more articles in our <a href="/anime/">anime section</a>.</p>
-
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What does chibi mean in Japanese?</summary><p>Chibi is a colloquial word for a small or short person, a small child or a runt. It comes from the verb chibiru, 'to wear down,' once used for worn sandals and brushes. Depending on tone, it can be affectionate or insulting, much like 'shorty' in English.</p></details><details><summary>Is chibi the same as super deformed?</summary><p>Yes, in practice. Super deformed, or SD, is the older industry term, popularized by Bandai's SD Gundam toys in 1985. Chibi kyara, 'chibi character,' followed soon after. English-speaking fans mostly say chibi, and the two words describe the same style.</p></details><details><summary>How many heads tall is a chibi?</summary><p>Usually two to four heads tall. The animator Gen Sato, quoted by Tofugu, put the head-to-body ratio between 1:1 and 4:1. Wikipedia describes the head as one third to one half of the character's height.</p></details><details><summary>Is it rude to call someone chibi?</summary><p>It can be. Japan's Kōjien dictionary says the word is used either to make light of someone or as a term of affection. Tofugu reports that NHK, Japan's public broadcaster, added chibi to its list of words not to say on air in 1983.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Chibi_(style)" rel="noopener">Chibi (style)</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://www.tofugu.com/japanese/chibi/" rel="noopener">Chibi: The Japanese Word That's Cute And Offensive</a>, Tofugu. Checked 31 October 2026</li><li><a href="https://www.dictionary.com/browse/chibi" rel="noopener">chibi</a>, Dictionary.com. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Anime" rel="noopener">Anime</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
 <section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/what-is-anime/"><span class="entry-title">What is anime? Meaning, history and where to start</span><span class="entry-desc">Anime is animation made in Japan. Where the word comes from, how to recognize the style, key dates from 1917 to Spirited Away, and which shows to start with.</span></a><time datetime="2026-11-09">9 November 2026</time></li><li><a href="/what-is-manga/"><span class="entry-title">What is manga? Meaning, history and how to read it</span><span class="entry-desc">Manga are comics from Japan, usually black and white and read right to left. What the word means, how manga is published, key dates and where to start.</span></a><time datetime="2026-11-11">11 November 2026</time></li><li><a href="/what-is-isekai/"><span class="entry-title">What is isekai? The 'another world' anime genre</span><span class="entry-desc">Isekai means 'another world': stories where a person is transported or reborn into a different world, often a game-like fantasy. Origins, tropes, examples.</span></a><time datetime="2026-11-13">13 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>

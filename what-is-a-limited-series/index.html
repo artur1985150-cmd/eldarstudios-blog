@@ -294,6 +294,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
@@ -435,8 +437,7 @@ footer.site a { color: var(--ink); }
 <td>Outstanding Limited or Anthology Series</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t1">HTML code</label>
@@ -484,7 +485,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-a-limited-series/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
 </details><p>According to the Emmy category&#39;s Wikipedia history, the split in 2014 came after a wave of limited series that followed FX&#39;s American Horror Story. The 2015 renaming let short cable seasons compete without being lined up against full network seasons.</p>
 <h2 id="what-is-an-anthology-series-and-how-is-it-different">What is an anthology series, and how is it different?</h2>
 <p>An anthology series tells a different story with a different set of characters in each episode or each season. The Twilight Zone (1959–1964) changed stories every episode. In 2011 American Horror Story made each season a standalone story, often recasting the same actors in new roles.</p>
@@ -523,8 +524,7 @@ footer.site a { color: var(--ink); }
 <td>American Horror Story</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t2">HTML code</label>
@@ -566,7 +566,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-a-limited-series/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
 </details><h2 id="what-is-a-limited-series-on-netflix">What is a limited series on Netflix?</h2>
 <p>On Netflix the label means the same thing: one finished story, no planned sequel season. The Queen&#39;s Gambit (2020) told Beth Harmon&#39;s rise in chess in seven episodes and won the 2021 Emmy. Adolescence, from Jack Thorne and Stephen Graham, has four episodes, each shot in one continuous take.</p>
 <p>Adolescence won Outstanding Limited or Anthology Series at the 2025 Emmys, according to the Television Academy. Its fellow nominees show how wide the category has become: the seventh season of the anthology Black Mirror, Dying for Sex, Monsters: The Lyle and Erik Menendez Story, and The Penguin.</p>
@@ -576,7 +576,6 @@ footer.site a { color: var(--ink); }
 <h2 id="why-do-so-many-shows-choose-the-limited-format">Why do so many shows choose the limited format?</h2>
 <p>The format suits stories that need an ending: true crime, historical disasters, novel adaptations. Chernobyl (2019) covered the 1986 disaster and its cleanup in five episodes and won the category that year. A fixed end also lets writers kill or change main characters, which open-ended shows rarely risk.</p>
 <p>Endings like that are where many dramas land their biggest reveal; our guide to <a href="/what-is-a-plot-twist/">what a plot twist is</a> explains the techniques. If you are comparing formats, the shorter internet cousin is covered in <a href="/what-is-a-web-series/">what a web series is</a>, and more guides are in <a href="/formats-and-genres/">formats and genres</a> and the <a href="/film/">film section</a>.</p>
-
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What does limited series mean on Netflix?</summary><p>It means the show tells one finished story and is not planned to continue. The Queen's Gambit (2020, seven episodes) and Adolescence (four episodes) are Netflix limited series. You can watch them knowing the story ends with the last episode.</p></details><details><summary>Is a limited series the same as a miniseries?</summary><p>In practice, yes. Both tell a story in a set number of episodes. Miniseries is the older word, common on American TV since the 1970s. The Television Academy switched its Emmy category to limited series in 2015, and since then the newer label has spread across streaming services.</p></details><details><summary>Can a limited series get a second season?</summary><p>It can, though then it stops being limited. Big Little Lies was billed as a miniseries and its first season won the Emmy for Outstanding Limited Series. HBO then made a second season, and the Producers Guild moved the show to its drama category.</p></details><details><summary>How many episodes does a limited series have?</summary><p>There is no single number. Wikipedia gives two to 12 as the usual range for a miniseries. The Emmys only require at least two episodes with a total running time of at least 150 minutes.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Miniseries" rel="noopener">Miniseries</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Primetime_Emmy_Award_for_Outstanding_Limited_or_Anthology_Series" rel="noopener">Primetime Emmy Award for Outstanding Limited or Anthology Series</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://tvline.com/2015/02/20/emmy-awards-rule-changes-comedy-drama-half-hour" rel="noopener">Emmy Shake-Up: Major Rule Changes Expand Number Of Nominees, Redefine Comedy And Drama Eligibility</a>, TVLine. Checked 31 October 2026</li><li><a href="https://www.televisionacademy.com/awards/nominees-winners/2025/outstanding-limited-or-anthology-series" rel="noopener">Outstanding Limited or Anthology Series, 2025</a>, Television Academy. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Anthology_series" rel="noopener">Anthology series</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://en.wikipedia.org/wiki/Big_Little_Lies_(TV_series)" rel="noopener">Big Little Lies (TV series)</a>, Wikipedia. Checked 31 October 2026</li></ol></section>
 <section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/what-is-a-web-series/"><span class="entry-title">What is a web series? Meaning, length and examples</span><span class="entry-desc">A web series is a run of short episodes, scripted or unscripted, made for the internet. How long episodes run, how it differs from TV, and famous examples.</span></a><time datetime="2026-11-03">3 November 2026</time></li><li><a href="/what-is-a-plot-twist/"><span class="entry-title">What is a plot twist? Meaning, types and examples</span><span class="entry-desc">A plot twist is a sudden turn that changes a story's direction or what you thought you knew. Types of twists, famous movie examples and why spoilers hurt less.</span></a><time datetime="2026-11-09">9 November 2026</time></li><li><a href="/would-you-want-to-know-when-you-die/"><span class="entry-title">Would you want to know when you die? What people say</span><span class="entry-desc">Most people say no. In a study of over 2,000 adults, 86 to 90 percent did not want to know bad news ahead. What surveys found and how films play with the idea.</span></a><time datetime="2026-11-03">3 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>

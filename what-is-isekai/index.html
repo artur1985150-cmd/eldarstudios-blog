@@ -294,6 +294,8 @@ footer.site a { color: var(--ink); }
   .crumbs a, .plate-shelf a, .plate-facts dd > a, .contents.narrow li a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .crumbs ol { align-items: center; }
   ul.plain a, .link-line a { display: inline-flex; align-items: center; min-height: 44px; }
+  /* A link that is a whole table cell's label (en/what-is-concept-art, 20.11.2026) is a tap target too. */
+  td > a:only-child, th > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
   ul.plain li { margin: 0; }
   .contents.narrow { padding-block: 0; }
   .contents.narrow summary { min-height: 44px; padding-block: 0.75rem; }
@@ -435,8 +437,7 @@ footer.site a { color: var(--ink); }
 <td>I&#39;m the Villainess, So I&#39;m Taming the Final Boss</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t1">HTML code</label>
@@ -478,7 +479,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-isekai/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t1" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Paul Price of the Journal of Anime and Manga Studies, cited on Wikipedia, counted six ways in: reincarnation, divine act, summoning, a specific tool, being pulled into a game, and no explanation at all.</p>
 <h2 id="where-did-isekai-come-from">Where did isekai come from?</h2>
 <p>The idea is old. Wikipedia traces it to the Japanese folktale of Urashima Tarō, a fisherman taken to an undersea kingdom who returns home a century later, and to Western books like Alice&#39;s Adventures in Wonderland and The Wonderful Wizard of Oz. The modern Japanese genre starts in 1979, and its boom starts in 2012.</p>
@@ -522,8 +523,7 @@ footer.site a { color: var(--ink); }
 <td>Isekai is 14 percent of all new anime releases</td>
 </tr>
 </tbody></table>
-</div>
-<details class="embed">
+</div><details class="embed">
 <summary>Add this table to your site</summary>
 <p class="small">Free to use on your site, blog or newsletter. Copy the code and paste it into your page as HTML: it shows the same table with a link back to this page as the source.</p>
 <label class="small" for="embed-t2">HTML code</label>
@@ -571,7 +571,7 @@ footer.site a { color: var(--ink); }
 &lt;/tbody&gt;&lt;/table&gt;
 &lt;p style=&quot;font-size:13px;margin:.5em 0 0&quot;&gt;Source: &lt;a href=&quot;https://blog.eldarstudios.com/what-is-isekai/&quot; style=&quot;color:inherit;text-decoration:underline&quot;&gt;Eldar Brothers Studios Blog&lt;/a&gt;. The sources for this table are listed on that page.&lt;/p&gt;
 &lt;/figure&gt;</textarea>
-<p><button type="button" class="embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
+<p><button type="button" class="button embed-copy" data-for="embed-t2" data-done="Copied" hidden>Copy code</button></p>
 </details><p>Web novel sites, above all Shōsetsuka ni Narō, made the 2010s boom possible: anyone could post a story, and the popular ones were picked up by publishers.</p>
 <h2 id="why-is-isekai-so-popular">Why is isekai so popular?</h2>
 <p>Isekai sells escape. Kadokawa editor Satoshi Arima said the stories appeal to office workers who would like to change jobs, because the heroes get to live as they please. The critic Charles Solomon wrote that the genre appeals to people who dream of starting over with a new career and identity.</p>
@@ -589,7 +589,6 @@ footer.site a { color: var(--ink); }
 <li>Inuyasha (1996), an older classic in which a schoolgirl falls through a well into Japan&#39;s past.</li>
 </ol>
 <p>Isekai elements are also common in Korean comics; see our guide to <a href="/what-is-a-manhwa/">manhwa</a>. Keep in mind that isekai describes a plot, while a label like <a href="/what-is-shonen/">shonen</a> describes the magazine audience, so the two answer different questions. More anime guides are in our <a href="/anime/">anime section</a>.</p>
-
 <script>document.querySelectorAll(".embed-copy").forEach(function(b){var t=document.getElementById(b.getAttribute("data-for"));if(!t)return;b.hidden=false;var label=b.textContent;b.addEventListener("click",function(){function done(){b.textContent=b.getAttribute("data-done");setTimeout(function(){b.textContent=label},2500)}t.select();if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t.value).then(done,function(){document.execCommand("copy");done()})}else{document.execCommand("copy");done()}})});</script></div><div data-read-end aria-hidden="true" style="height:1px"></div><section class="faq" aria-labelledby="questions"><h2 id="questions">Questions people ask</h2><details><summary>What does isekai mean in English?</summary><p>Isekai is the Japanese word for 'another world' or 'different world.' Dictionary.com defines it as a Japanese science fiction or fantasy genre in which the main character is transported to another world, and also as a single work in that genre, such as a game, animated film or graphic novel.</p></details><details><summary>What was the first isekai?</summary><p>The genre's roots go back to the folktale of Urashima Tarō and to Alice's Adventures in Wonderland. The first modern Japanese isekai is usually given as Haruka Takachiho's novel Warrior from Another World (1979), and the first isekai anime as Aura Battler Dunbine (1983).</p></details><details><summary>Why do isekai titles get so long?</summary><p>Many isekai start as web novels on Shōsetsuka ni Narō, a site that listed chapters by title only. J-Novel Club's CEO Samuel Pinarsky said writers responded with descriptive titles to attract readers. Collider's example: Reborn as a Vending Machine, Now I Wander the Dungeon.</p></details><details><summary>Is Inuyasha an isekai?</summary><p>Collider counts it as an early example. In Inuyasha (1996), Kagome falls down a well and finds herself in Japan's Sengoku period. Some readers would call that time travel, and Wikipedia notes that isekai is usually treated as separate from time-travel stories, so the label is debated.</p></details><details><summary>What is the difference between isekai and portal fantasy?</summary><p>They share the basic idea: a person from our world crosses into another one. Isekai is the Japanese form, with its own habits: settings borrowed from Japanese role-playing games, reincarnation after death and heroes with 'cheat' powers. Wikipedia lists portal fantasy as a related genre and Oz as one of isekai's roots.</p></details></section><section class="sources" aria-labelledby="sources"><h2 id="sources">Sources</h2><ol><li><a href="https://en.wikipedia.org/wiki/Isekai" rel="noopener">Isekai</a>, Wikipedia. Checked 31 October 2026</li><li><a href="https://collider.com/what-is-isekai-anime/" rel="noopener">What Is Isekai Anime?</a>, Collider. Checked 31 October 2026</li><li><a href="https://www.dictionary.com/browse/isekai" rel="noopener">isekai</a>, Dictionary.com. Checked 31 October 2026</li></ol></section>
 <section class="related" aria-labelledby="read-next"><h2 id="read-next">Read next</h2><ul class="entries"><li><a href="/what-is-anime/"><span class="entry-title">What is anime? Meaning, history and where to start</span><span class="entry-desc">Anime is animation made in Japan. Where the word comes from, how to recognize the style, key dates from 1917 to Spirited Away, and which shows to start with.</span></a><time datetime="2026-11-09">9 November 2026</time></li><li><a href="/what-is-manga/"><span class="entry-title">What is manga? Meaning, history and how to read it</span><span class="entry-desc">Manga are comics from Japan, usually black and white and read right to left. What the word means, how manga is published, key dates and where to start.</span></a><time datetime="2026-11-11">11 November 2026</time></li><li><a href="/what-is-chibi/"><span class="entry-title">What is chibi? The big-head anime art style explained</span><span class="entry-desc">Chibi is an anime and manga style that draws characters tiny, with huge heads and short limbs. The meaning, its proportions, its 1980s origins and examples.</span></a><time datetime="2026-11-13">13 November 2026</time></li></ul></section></div></div>
 </article><aside class="lid" aria-labelledby="lid-h"><h2 id="lid-h">Where to watch and follow</h2><p>Nothing has aired yet. The studio's site has the series, and the Telegram channel says when the first episode is out.</p><ul><li><a class="go" href="https://eldarstudios.com/en/p/wtc" hreflang="en" rel="noopener" data-goatcounter-click="studio-when-time-comes"><span class="go-name">When Time Comes</span><span class="go-what">The series on the studio's site</span></a></li><li><a class="go" href="https://t.me/eldarstudios" rel="noopener" data-goatcounter-click="telegram"><span class="go-name">Telegram: @eldarstudios</span><span class="go-what">The studio's channel</span></a></li></ul></aside></main>
